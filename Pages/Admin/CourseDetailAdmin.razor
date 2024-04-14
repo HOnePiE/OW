@@ -1,0 +1,357 @@
+﻿@page "/admin-course-detail/{id}"
+@inject NavigationManager navigation
+@inject IJSRuntime JSRuntime
+
+<div id="db-wrapper">
+	<!-- navbar vertical -->
+	<!-- Sidebar -->
+	<_Sidebar></_Sidebar>
+	<!-- Page Content -->
+	<main id="page-content">
+		@if (Layout.User != null)
+		{
+			<_Header></_Header>
+		}
+		@if(course != null)
+		{
+			<div class="container">
+				<div class="columns is-multiline">
+					<div class="column  is-3">
+						<div class="box has-text-centered background-darkmode-dark p-2">
+							<span class="icon is-large has-text-warning">
+								<i class="fas fa-users"></i>
+							</span>
+							<div>
+								<p class="subtitle has-text-light is-6">@(course.members.Count > 0 ? course.members.Count : "" ) Participated in study</p>
+							</div>
+						</div>
+					</div>
+					<!-- Features -->
+					<div class="column is-3">
+						<div class="box has-text-centered background-darkmode-dark has-text-light p-2">
+							<span class="icon is-large has-text-warning">
+								<i class="fa-solid fa-graduation-cap"></i>
+							</span>
+							<div>
+								<p class="subtitle has-text-light is-6">Graduated</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<section class="container-fluid p-4">
+				<div class="row">
+					<!-- Page Header -->
+					<div class="col-lg-12 col-md-12 col-12">
+						<div class="border-bottom pb-3 mb-3 d-md-flex align-items-center justify-content-between">
+							<div class="mb-3 mb-md-0">
+								<h2 class="mb-1 has-text-white  is-light">@course.name</h2>
+								<!-- Breadcrumb -->
+							</div>
+							<div>
+                <a @onclick="() => EditLesson(new LessonModel())" class="btn btn-primary mr-2" data-bs-toggle="modal" data-bs-target="#newCatgory">Add New Lesson</a>
+								<a href="/admin-course-overview" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#newCatgory">Back To Course</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-12 col-md-12 col-12">
+						<!-- Card -->
+						<div class="card mb-4">            
+							<!-- Table -->
+							<div class="table-responsive border-0 overflow-y-hidden">
+								<table class="table background-darkmode-dark is-fullwidth is-hoverable">
+									<thead style="  background-color: #1e293b ;">
+										<tr>
+											<th width="22%">Lesson title</th>
+											<th width="25%">Description</th>
+											<th width="12%">Time</th>
+											<th width="5%">Sequence</th>
+											<th width="7%">Handle</th>
+										</tr>
+									</thead>
+									<tbody id="user_listing">
+                    @foreach (var lesson in lessons)
+                    {
+                      <tr @onclick=" () => EditLesson(lesson)">
+                        <td>
+                          <p class="">@lesson.name</p>
+                        </td>
+                        <td>
+                          <p class="">@lesson.description</p>
+                        </td>
+                        <td>
+                          <p class="">@lesson.time</p>
+                        </td>
+
+                        <td>
+                          <p class="">@lesson.pos</p>
+                        </td>
+                        <td>
+                          <p>
+                            <span class="icon-text">
+                              <a class="has-text-link">
+                                <span class="icon">
+                                  <i class="fa-solid fa-pen"></i>
+                                </span>
+                              </a>
+                              <a class="has-text-danger">
+                                <span class="icon">
+                                  <i class="fa-solid fa-trash"></i>
+                                </span>
+                              </a>
+                            </span>
+                          </p>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		}
+	</main>
+  @if (edit)
+  {
+    <div id="courseDetail-modal" class="modal is-active" style="font-weight: 500; font-size: 1.25rem;">
+      <div class="modal-background"></div>
+      <div class="modal-content" style="width: 90%;height: 78%; overflow: hidden;border-radius: 6px;">
+        <div class="" style="width: 100%; height: 100%; overflow:hidden;">
+          <section class="section background-darkmode-light"
+                   style="width: 100%; height: 100%; overflow-y: scroll;">
+            <div class="columns" style="width: 100%;">
+              <div class="column box-shadow background-darkmode-dark" style="border-radius: 6px;">
+                <div class="">
+                  <div class="is-flex is-justify-content-center mb-4">
+                    <div class="card-image">
+                      <figure class="image">
+                        <img id="imgClickAndChange" style="border-radius: 6px;"
+                             src="../../assets/images/upload/@course.image" alt="course">
+                        <input type="file" id="fileInput" style="display: none;">
+                      </figure>
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label class="is-size-6">Course</label>
+                    <div class="control">
+                      <input class="input" type="text" value="@course.name" readonly>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label class="is-size-6">Date Create Lesson</label>
+                    <div class="control">
+                      <input class="input" type="text" value="@(lesson.date_create == 0 ? "" : new DateTime(lesson.date_create).ToString("dd/MM/yyyy"))" readonly>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label class="is-size-6">Lesson Creator</label>
+                    @{
+                      
+                      if (!string.IsNullOrEmpty(lesson.creator))
+                      {
+                        var creator = users.FirstOrDefault(x => x.id == lesson.creator);
+                        <div class="control">
+                          <input class="input" value="@creator.full_name" type="text" readonly>
+                        </div>
+                      } else
+                      {
+                        <div class="control">
+                          <input class="input" value="" type="text" readonly>
+                        </div>
+                      }
+                    }
+                    
+                  </div>
+                  <!-- more items here -->
+                </div>
+              </div>
+
+              <div class="column is-three-quarters fixed-grid has-2-cols has-1-cols-mobile">
+                <div class="grid has-1-cols-mobile">
+                  <div class="cell is-col-span-2-widescreen field">
+                    <div class="control">
+                      <label class="title is-6 background-darkmode-light ">Lession title</label>
+                      <input @bind="lesson.name" class="input background-darkmode-light"
+                             placeholder="Lesson title..."  />
+                    </div>
+                  </div>
+                  <div class="cell field">
+                    <label class="title is-6 background-darkmode-light is-size-6">Time</label>
+                    <div class="control">
+                      <input @bind="lesson.time" class="input background-darkmode-light" 
+                             placeholder="Ex: 5h 30m 20s" >
+                    </div>
+                  </div>
+                  <div class="cell field">
+                    <label class=" title is-6 background-darkmode-light is-size-6">Sequence</label>
+                    <div class="control">
+                      <input @bind="pos" @onblur="CheckPos" class="input background-darkmode-light" />
+                    </div>
+                  </div>
+                  <div class="cell is-col-span-2-widescreen field">
+                    <div class="control">
+                      <label class="title is-6 background-darkmode-light is-size-6">Description</label>
+                      <textarea @bind="lesson.description" class="textarea background-darkmode-light"
+                                placeholder="Description of the course..." ></textarea>
+                    </div>
+
+                    <div class="control mt-4">
+                      <label class="title is-6 background-darkmode-light ">Link youtube</label>
+                      <input @bind="lesson.video"  class="input background-darkmode-light"
+                             placeholder="Link..."  />
+                    </div>
+                  </div>
+                  <div class="field">
+                    <div class="field">
+                      <div class="control pt-2">
+                        @if (!string.IsNullOrEmpty(error))
+                        {
+                          <p class="has-text-danger">@error</p>
+                        }
+
+                        @if (!string.IsNullOrEmpty(message))
+                        {
+                          <p class="has-text-success">@message</p>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                  <!-- functional button-->
+
+                </div>
+                <div class="field is-flex is-justify-content-flex-end">
+                  <div class="control">
+                    <a @onclick="UpdateLesson" class="button  is-success mr-2">@(string.IsNullOrEmpty(lesson.id) ? "Add" : "Update")</a>
+                    <a @onclick="() => edit = false" class="button  is-danger">Exit</a>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </section>
+        </div>
+      </div>
+    </div>
+  }
+
+</div>
+
+@code {
+  [CascadingParameter]
+  public MainLayout Layout { get; set; }
+
+  [Parameter]
+  public string id { get; set; }
+
+  public CourseModel course;
+  private bool edit;
+  public LessonModel lesson;
+  private List<UserModel> users = new();
+  private List<LessonModel> lessons = new();
+
+  private string error;
+  private string message;
+  private int pos;
+
+
+  protected override async Task OnInitializedAsync()
+  {
+    if (!string.IsNullOrEmpty(id))
+    {
+      course = await DbCourse.GetById(id);
+      if (course == null)
+      {
+        navigation.NavigateTo("admin-course-overview");
+      }
+      lessons = await DbLesson.GetAllByCourse(id);
+      users = await DbUser.GetAll();
+    }
+    else
+    {
+      navigation.NavigateTo("admin-course-overview");
+    }
+  }
+
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    if(Layout.User != null)
+    {
+      if (course.instructor != Layout.User.id && course.creator != Layout.User.id)
+      {
+        navigation.NavigateTo("admin-course-overview");
+      }
+    }
+  }
+
+  private void CheckPos()
+  {
+    if (pos < 1 || pos > course.lesson.Count + 1)
+    {
+      if (string.IsNullOrEmpty(lesson.id))
+        pos = course.lesson.Count + 1;
+      else
+        pos = lesson.pos;
+    }
+  }
+
+  private void EditLesson(LessonModel model)
+  {
+    if (string.IsNullOrEmpty(model.id))
+      pos = course.lesson.Count + 1;
+    else 
+      pos = model.pos;
+    edit = true;
+    lesson = model;
+    error = null;
+    message = null;
+  }
+
+  private async void UpdateLesson()
+  {
+    error = null;
+    message = null;
+    if (string.IsNullOrEmpty(lesson.name))
+    {
+      error = "Please input name for course";
+      return;
+    }
+    if (string.IsNullOrEmpty(lesson.time))
+    {
+      error = "Please choose time for course";
+      return;
+    }
+    if (string.IsNullOrEmpty(lesson.video))
+    {
+      error = "Please input link video";
+      return ;
+    }
+
+
+    if (string.IsNullOrEmpty(lesson.id))
+    {
+      lesson.pos = pos;
+      lesson.date_create = DateTime.Today.Ticks;
+      lesson.creator = Layout.User.id;
+      lesson.active = true;
+      lesson.course = course.id;
+      message = "Create Successful";
+      lesson = await DbLesson.Create(lesson);
+      if (!course.lesson.Contains(lesson.id))
+        course.lesson.Add(lesson.id);
+      await DbCourse.Update(course);
+    }
+    else
+    {
+      lesson.pos = pos;
+      message = "Update Successful";
+      await DbLesson.Update(lesson);
+    }
+    lessons = await DbLesson.GetAllByCourse(id);
+  }
+}

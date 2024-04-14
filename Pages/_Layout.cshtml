@@ -1,0 +1,61 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@namespace astn_course.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<base href="~/" />
+	<link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+	<link href="astn_course.styles.css" rel="stylesheet" />
+	<!-- Favicon icon-->
+	<!-- <link rel="shortcut icon" type="image/x-icon" href="./assets/images/favicon/favicon.ico" /> -->
+	<link rel="shortcut icon" type="image/x-icon" href="./assets/images/brand/logo/brand-logo2.svg" />
+	<link rel="stylesheet" type="text/css" href="./assets/icons/fontawesome-free-6.5.1-web/css/all.min.css">
+	<link rel="stylesheet" href="./assets/css/index.css">
+
+	<!-- darkmode js -->
+	<script src="./assets/js/vendors/darkMode.js"></script>
+
+	<!-- Libs CSS -->
+	<link href="./assets/fonts/feather/feather.css" rel="stylesheet" />
+	<link href="./assets/libs/simplebar/dist/simplebar.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+
+
+	<!-- Theme CSS -->
+	<link rel="stylesheet" href="./assets/css/theme.min.css" />
+	<!-- slider js libs -->
+	<link href="./assets/libs/tiny-slider/dist/tiny-slider.css" rel="stylesheet" />
+
+	<component type="typeof(HeadOutlet)" render-mode="Server" />
+</head>
+<body>
+	@RenderBody()
+
+	<script src="_framework/blazor.server.js"></script>
+	<script src="~/assets/js/app.js"></script>
+	@* <script src="~/assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="~/assets/libs/simplebar/dist/simplebar.min.js"></script>
+	<script src="~/assets/js/theme.min.js"></script>
+	<script src="~/assets/libs/tiny-slider/dist/tiny-slider.js"></script>
+	<script src="~/assets/libs/tiny-slider/dist/min/tiny-slider.js"></script>
+	<script src="~/assets/libs/tippy.js/dist/tippy-bundle.umd.min.js"></script>
+	<script src="~/assets/js/vendors/tnsSlider.js"></script>
+	<script src="~/assets/js/vendors/tooltip.js"></script>
+	<script src="_content/BlazorDateRangePicker/clickAndPositionHandler.js"></script>
+  <script src="_content/Blazored.TextEditor/quill-blot-formatter.min.js"></script>
+  <script src="_content/Blazored.TextEditor/Blazored-BlazorQuill.js"></script>
+	<script src="~/assets/js/app.js"></script> *@
+  <script>
+        window.CookieFunction = {
+            acceptMessage: function (cookieString) {
+                document.cookie = cookieString;
+            }
+        };    
+   </script>
+
+</body>
+</html>

@@ -1,0 +1,276 @@
+﻿@page "/admin-course-category"
+<div id="db-wrapper">
+  <!-- navbar vertical -->
+  <!-- Sidebar -->
+  <!-- Page Content -->
+  <_Sidebar></_Sidebar>
+  <main id="page-content">
+    <_Header></_Header>
+    <!-- Container fluid -->
+    <section class="container-fluid p-4">
+      <div class="row">
+        <!-- Page Header -->
+        <div class="col-lg-12 col-md-12 col-12">
+          <div class="border-bottom pb-3 mb-3 d-md-flex align-items-center justify-content-between">
+            <div class="mb-3 mb-md-0">
+              <h1 class="mb-1 h2 fw-bold">Courses Category</h1>
+              <!-- Breadcrumb -->
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item">
+                    <a href="../dashboard/admin-dashboard.html">Dashboard</a>
+                  </li>
+                  <li class="breadcrumb-item">
+                    <a href="#">Courses</a>
+                  </li>
+                  <li class="breadcrumb-item active" aria-current="page">Courses Category</li>
+                </ol>
+              </nav>
+            </div>
+            <div>
+              <a @onclick="() => editCategory = true" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newCatgory">Add New Category</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-12">
+          <!-- Card -->
+          <div class="card mb-4">
+            <!-- Card header -->
+            <div class="card-header border-bottom-0">
+              <!-- Form -->
+              <form class="d-flex align-items-center">
+                <span class="position-absolute ps-3 search-icon">
+                  <i class="fe fe-search"></i>
+                </span>
+                <input type="search" class="form-control ps-6" placeholder="Search Course Category" />
+              </form>
+            </div>
+            <!-- Table -->
+            <div class="table-responsive border-0 overflow-y-hidden">
+              <table class="table background-darkmode-dark is-fullwidth is-hoverable">
+                <thead>
+                  <tr>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Date Created</th>
+                    <th>Active</th>
+                    <th>Handle</th>
+                  </tr>
+                </thead>
+                <tbody id="user_listing">
+                  @foreach (var category in categories)
+                  {
+                    <tr>
+                      <td>
+                        <p class="">@category.name</p>
+                      </td>
+                      <td>
+                        <p class="">@category.description</p>
+                      </td>
+                      <td>
+                        <p class="">@(new DateTime(category.date_create).ToString("dd/MM/yyyy"))</p>
+                      </td>
+
+                      <td>
+                        @if (category.active)
+                        {
+                          <p>
+                            <a class="has-text-success" @onclick="() => UpdateActive(category, false)">
+                              <i class="fa-solid fa-toggle-on"></i>
+                            </a>
+                          </p>
+                        }
+                        else
+                        {
+                          <p>
+                            <a @onclick="() => UpdateActive(category, true)">
+                              <i class="fa-solid fa-toggle-off"></i>
+                            </a>
+                          </p>
+                        }
+
+                      </td>
+                      <td>
+                        <p>
+                          <span class="icon-text">
+                            <a class="has-text-link" @onclick="() => Edit(category)">
+                              <span class="icon">
+                                <i class="fa-solid fa-pen"></i>
+                              </span>
+                            </a>
+                            <a class="has-text-danger" @onclick="() => {categoryEdit = category;  confirmDelete = true; }">
+                              <span class="icon">
+                                <i class="fa-solid fa-trash"></i>
+                              </span>
+                            </a>
+                          </span>
+                        </p>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<!-- Modal -->
+@if (editCategory)
+{
+  <div class="modal is-active " tabindex="-1" role="dialog" aria-labelledby="newCatgoryLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" >
+      <div class="modal-content bg-light">
+        <div class="modal-header">
+          <h4 class="modal-title mb-0 has-text-white" id="newCatgoryLabel">Create New Category</h4>
+          <a @onclick="() => editCategory = false" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></a>
+        </div>
+        <div class="modal-body" style="width: 400px">
+          <div class="needs-validation" novalidate>
+            <div class="mb-3 mb-2">
+              <div class="form-label" for="title">
+                Title
+                <span class="text-danger">*</span>
+              </div>
+              <input @bind="categoryEdit.name" type="text" class="form-control" placeholder="Input name of Category" id="title" required />
+              <div class="invalid-feedback">Please enter category.</div>
+            </div>
+            <div class="mb-3 mb-3">
+              <div class="form-label">Description</div>
+              <div id="editor">
+                <textarea @bind="categoryEdit.description" type="text" class="form-control" placeholder="Input description" id="title" required />
+              </div>
+            </div>
+            <div class="mb-3 mb-2">
+              <div class="form-label" for="parent">Choose Major</div>
+              <select @onchange="SelectMajor" class="form-select" id="parent" required="">
+                <option value="">Select</option>
+                @foreach(var major in majors)
+                {
+                  if(categoryEdit.major == major.id)
+                  {
+                    <option value="@major.id" selected>@major.name</option>
+                  } 
+                  else
+                  {
+                    <option value="@major.id">@major.name</option>
+                  }
+                }
+              </select>
+            </div>
+            @if (!string.IsNullOrEmpty(message))
+            {
+              <div class="has-text-danger pb-2">@message</div>
+            }
+            <div>
+              <a @onclick="UpdateCategory" type="submit" class="btn btn-primary" for="category_form">@(categoryEdit.id != null ? "Update Category" : "Add New Category")</a>
+              <a @onclick="() => editCategory = false" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+@if (confirmDelete)
+{
+  <div class="modal is-active">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <section class="modal-card-body has-background-white">
+        <p>Bạn chắc chắn xóa tài khoản <strong class="has-text-black">@categoryEdit.name</strong></p>
+        <div class="buttons">
+          <a class="button is-danger" @onclick="Delete">Confirm</a>
+          <a class="button" @onclick="() => confirmDelete = false">Cancel</a>
+        </div>
+      </section>
+    </div>
+  </div>
+}
+@code {
+  [CascadingParameter]
+  public MainLayout Layout { get; set; }
+
+  private bool editCategory = false;
+  private CategoryModel categoryEdit = new();
+  private List<CategoryModel> categories = new();
+  private bool confirmDelete;
+  private List<MajorModel> majors = new();
+  private string message;
+  protected override async Task OnInitializedAsync()
+  {
+    categories = await DbCategory.GetAll();
+    majors = await DbMajor.GetAll();
+  }
+
+
+  private async void UpdateActive(CategoryModel category, bool value)
+  {
+    category.active = value;
+    await DbCategory.Update(category);
+  }
+
+  private async Task Edit(CategoryModel model)
+  {
+    message = null;
+    editCategory = true;
+    categoryEdit = Shared.Clone(model);
+  }
+  private async Task Delete()
+  {
+    await DbCategory.Delete(categoryEdit.id);
+    confirmDelete = false;
+    categories.Remove(categoryEdit);
+  }
+
+  private void SelectMajor(ChangeEventArgs e)
+  {
+    categoryEdit.major = e.Value.ToString();
+  }
+
+  private async void UpdateCategory()
+  {
+    if(string.IsNullOrEmpty(categoryEdit.name))
+    {
+      message = "Vui lòng nhập tên Category!";
+      return;
+    }
+
+    if (string.IsNullOrEmpty(categoryEdit.description))
+    {
+      message = "Vui lòng nhập mô tả Category!";
+      return;
+    }
+
+    if (string.IsNullOrEmpty(categoryEdit.major))
+    {
+      message = "Vui lòng chọn Major!";
+      return;
+    }
+
+    if (string.IsNullOrEmpty(categoryEdit.id))
+    {
+      categoryEdit.date_create = DateTime.Today.Ticks;
+      categoryEdit.active = true;
+      await DbCategory.Create(categoryEdit);
+      categories.Add(categoryEdit);
+    } 
+    else
+    {
+      await DbCategory.Update(categoryEdit);
+      editCategory = false;
+      categories = await DbCategory.GetAll();
+    }
+    categoryEdit = new();
+    message = null;
+    editCategory = false;
+  }
+
+  
+
+
+}

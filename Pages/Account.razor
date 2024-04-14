@@ -1,0 +1,347 @@
+﻿	@page "/account/{id}"
+<PageTitle>@_title</PageTitle>
+
+	<div class="text-dark">
+		<Header></Header>
+
+		<main>
+			<section class="pt-5 pb-5">
+				<div class="container">
+					<!-- Content -->
+					<div class="columns mt-0">
+						<div class="column is-2 shadow-hover" style="border-radius: 6px;">
+							<!-- Side navbar -->
+							<aside class="menu">
+								<p class="menu-label primary-color has-text-weight-bold">
+									Account Settings
+								</p>
+								<ul class="menu-list">
+									<li class="">
+										<a class="is-active" href="./account-profile.html">
+											<span class="icon-text">
+												<span class="icon">
+													<i class="fe fe-settings"></i>
+												</span>
+												<span>Edit Profile</span>
+											</span>
+										</a>
+									</li>
+									<li class="is-hidden">
+										<a href="./account-security.html">
+											<span class="icon-text">
+												<span class="icon">
+													<i class="fe fe-user"></i>
+												</span>
+												<span>Security</span>
+											</span>
+										</a>
+									</li>
+									<li class="is-hidden">
+										<a href="./account-deleteProfile.html">
+											<span class="icon-text">
+												<span class="icon">
+													<i class="fe fe-trash"></i>
+												</span>
+												<span>Delete Profile</span>
+											</span>
+										</a>
+									</li>
+								</ul>
+							</aside>
+						</div>
+						<!-- page content here (edit profile, security, delete profile) -->
+						<div class="column" id="myTabContent">
+							<div class="card">
+								<div class="card-content">
+									<div class="columns is-vcentered">
+										<div class="column is-flex is-align-items-center">
+											<figure class="image is-128x128">
+												<img class="is-rounded" src="../assets/images/avatar/gigachad.jpg"
+														 id="img-uploaded" alt="avatar" />
+											</figure>
+											<div class="ml-3">
+												<h4 class="title is-4">Your avatar</h4>
+												<p class="subtitle is-6">
+													PNG or JPG no bigger than 800px wide and tall.
+												</p>
+											</div>
+										</div>
+										<div class="column is-narrow">
+											@if (edit)
+										{
+											<a @onclick="() => {edit = false ; message = null;}" class="button is-small is-outlined is-link">Edit</a>
+										}
+										else
+										{
+											<a @onclick="() => edit = true" class="button is-small is-outlined is-danger">Close</a>
+										}
+									</div>
+								</div>
+								<hr class="background-color">
+								<div>
+									<h4 class="title is-4">Personal Details</h4>
+									<p class="subtitle is-6">Edit your personal information and address.</p>
+									<div class="fixed-grid has-4-cols" style="width: 100%;">
+										<div class="grid">
+											<!-- max 8 items -->
+											<div class="cell field">
+												<label class="title is-6">First Name</label>
+												<div class="control">
+													<input class="input" type="text" @bind="@userEdit.first_name"
+																 readonly="@edit">
+												</div>
+											</div>
+											<div class="cell field">
+												<label class="title is-6">Last Name</label>
+												<div class="control">
+													<input class="input" type="text" @bind="@userEdit.last_name" readonly="@edit">
+												</div>
+											</div>
+											<div class="cell field">
+												<label class="title is-6">Email</label>
+												<div class="control">
+													<input class="input" type="email" @bind="@userEdit.email"
+																 readonly="@edit">
+												</div>
+											</div>
+											<div class="cell field">
+												<label class="title is-6">Birthday <span class="has-text-weight-light " style="font-size: 12px"> (dd/MM/yyyy)</span></label>
+												<div class="control">
+													<input class="input" type="tel" @bind="userEdit.birthday" readonly="@edit">
+												</div>
+											</div>
+											<div class="cell field">
+												<label class="title is-6">Permanent Address</label>
+												<div class="control">
+													<input class="input" type="text"
+																 @bind="@userEdit.address" readonly="@edit">
+												</div>
+											</div>
+											<div class="cell field">
+												<label class="title is-6">
+													Place of Birth /
+													Hometown
+												</label>
+												<div class="control">
+													<input class="input" type="text"
+																 @bind="@userEdit.hometown" readonly="@edit">
+												</div>
+											</div>
+											<div class="cell field">
+												<label class="title is-6">Gender</label>
+												<div class="control">
+													@if (edit)
+													{
+														if (userEdit.gender == 0)
+														{
+															<input class="input" type="text"
+																		 value="" readonly="@edit">
+														}
+														@foreach (var item in genders)
+														{
+															if (item.id == userEdit.gender)
+															{
+																<input class="input" type="text"
+																value="@item.name" readonly="@edit">
+															}
+														}
+													} 
+													else
+													{
+														<div class="select is-fullwidth">
+															<select @onchange="ChangeGender" id="role" name="role">
+																@if(userEdit.gender == 0)
+																{
+																	<option value=0>Select Gender</option>
+																}
+																@foreach (var item in genders)
+																{
+																	if (item.id == userEdit.gender)
+																	{
+																		<option value=@item.id selected="">@item.name</option>
+																	}
+																	else
+																	{
+																		<option value=@item.id>@item.name</option>
+																	}
+																}
+
+															</select>
+														</div>
+													}
+												</div>
+											</div>
+											<div class="cell field">
+												<label class="title is-6">Ethnicity</label>
+												<div class="control">
+													<input class="input" type="text" @bind="@userEdit.ethnicity" readonly="@edit">
+												</div>
+											</div>
+
+											<div class="cell field">
+												<label class="title is-6">Major</label>
+												<div class="control">
+													@if (edit)
+													{
+														if (string.IsNullOrEmpty(userEdit.major))
+														{
+															<input class="input" type="text"
+																		 value="" readonly="@edit">
+														}
+														@foreach (var item in majors)
+														{
+															if (item.id == userEdit.major)
+															{
+																<input class="input" type="text"
+																			 value="@item.name" readonly="@edit">
+															}
+														}
+													}
+													else
+													{
+														<div class="select is-fullwidth">
+															<select @onchange="ChangeMajor" id="role" name="role">
+																@if (string.IsNullOrEmpty(userEdit.major))
+																{
+																	<option value="">Select Major</option>
+																}
+																@foreach (var item in majors)
+																{
+																	if (item.id == userEdit.major)
+																	{
+																		<option value="@item.id" selected="">@item.name</option>
+																	}
+																	else
+																	{
+																		<option value="@item.id">@item.name</option>
+																	}
+																}
+
+															</select>
+														</div>
+													}
+												</div>
+											</div>
+											<div class="cell field">
+												<label class="title is-6">Phone Number</label>
+												<div class="control">
+													<input class="input" type="text" @bind="@userEdit.phone_number" readonly="@edit">
+												</div>
+											</div>
+											<div class="cell field">
+												<label class="title is-6">School</label>
+												<div class="control">
+													<input class="input" type="text" @bind="@userEdit.school" readonly="@edit">
+												</div>
+											</div>
+										</div>
+									</div>
+									@if (!string.IsNullOrEmpty(message))
+									{
+										<div class="field">
+											<div class="control">
+												<p class="has-text-success">@message</p>
+											</div>
+										</div>
+									}
+									@if (!edit)
+									{
+										<div class="field">
+											<div class="control">
+												<a @onclick="Update" class="button is-primary" type="submit">Update Profile</a>
+											</div>
+										</div>
+									}
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</section>
+	</main>
+
+</div>
+
+@code {
+	[CascadingParameter]
+	public MainLayout Layout { get; set; }
+
+	[Parameter]
+	public string id { get; set; }
+
+	private string _title = "Your Account";
+
+	private bool edit = true;
+
+	private UserModel userEdit = new();
+
+	private string message;
+	private string error;
+	private List<StaticModel> genders;
+	private List<MajorModel> majors;
+
+	protected override async Task OnInitializedAsync()
+	{
+		majors = await DbMajor.GetAll();
+		genders = new()
+		{
+			new StaticModel
+			{
+				id = 1,
+				name = "Male",
+			},
+			new StaticModel
+			{
+				id = 2,
+				name = "Female",
+			},
+			new StaticModel
+			{
+				id = 3,
+				name = "Other",
+			},
+		};
+		userEdit = await DbUser.GetById(id);
+	}
+
+	private async void Update()
+	{
+		await DbUser.Update(userEdit);
+		message = "Update successful";
+		edit = true;
+	}
+
+	private async void ChangeGender(ChangeEventArgs e)
+	{
+		userEdit.gender = Convert.ToInt32(e.Value);
+	}
+
+	private async void ChangeMajor(ChangeEventArgs e)
+	{
+		userEdit.major = e.Value.ToString();
+	}
+
+	private async Task HandleImageUpload(InputFileChangeEventArgs e)
+	{
+		var imageFile = e.File;
+
+		if (imageFile != null)
+		{
+			var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "UploadedImages");
+
+			if (!Directory.Exists(folderPath))
+			{
+				Directory.CreateDirectory(folderPath);
+			}
+
+			var imagePath = Path.Combine(folderPath, Guid.NewGuid().ToString() + Path.GetExtension(imageFile.Name));
+
+			using (var stream = new FileStream(imagePath, FileMode.Create))
+			{
+				await imageFile.OpenReadStream().CopyToAsync(stream);
+			}
+		}
+	}
+}

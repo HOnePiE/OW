@@ -1,0 +1,199 @@
+﻿@page "/shope-course"
+
+<!-- header navbar with search -->
+<Header></Header>
+<!-- Page content -->
+<div class="page-content" style="">
+	<!-- Page header -->
+	<!-- Content -->
+	<div class="page-content">
+		<!-- Page header -->
+		<!-- Content -->
+		<section class="section pt-4	x	">
+			<div class="container">
+				<div class="columns">
+					<!-- function content -->
+					<div class="column is-one-fifth">
+
+						<div class="p-3" style="border-radius: 6px;">
+							<!-- Card -->
+							<div class="blur-background">
+								<!-- Card header -->
+								<div class="columns is-vcentered">
+									<div class="column">
+										<div class="p-0">
+											<h1 class="title primary-color">Course</h1>
+										</div>
+									</div>
+								</div>
+								<div class="card-header mb-2">
+									<h4 class="title is-4 mb-0">Filter</h4>
+								</div>
+								<div class="select m-2">
+									<select>
+										<option value="">Sort by</option>
+										<option value="Newest">Newest</option>
+										<option value="Most Popular">Most Popular</option>
+										<option value="Highest Rated">Highest Rated</option>
+									</select>
+								</div>
+								<!-- Card body -->
+								<div class="card-content">
+									<span class="title is-6 px-0 mb-2 primary-color">Majors</span>
+									<!-- Checkbox -->
+									<div class="form-check mb-1">
+										<input @onclick="SelectAllMajor" type="checkbox" checked="@(filterMajor.Count == 0)">
+										<label for="reactCheck">All</label>
+									</div>
+									@foreach (var item in majors)
+									{
+										<div class="form-check mb-1">
+											<input @onclick="() => FilterMajor(item.id)" type="checkbox"  checked="@(filterMajor.Contains(item.id))">
+											<label>@item.name</label>
+										</div>
+									}
+								</div>
+								<!-- Card body -->
+								<!-- Card body -->
+								<div class="card-content">
+									<span class="title is-6 px-0 mb-2 primary-color">Level</span>
+									<!-- Checkbox -->
+									<div class="form-check mb-1">
+										<input @onclick="SelectAllLevel" type="checkbox" checked="@(filterLevel.Count == 0)">
+										<label for="reactCheck">All</label>
+									</div>
+									@foreach(var item in levels)
+									{
+										<div class="form-check mb-1">
+											<input @onclick="() => FilterLevel(item.id)" type="checkbox"  checked="@(filterLevel.Contains(item.id))" >
+											<label>@item.name</label>
+										</div>
+									}
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Tab content -->
+					<div class="column">
+						<!-- Tab pane row -->
+						<div class="is-active pb-4" id="tabPaneList" role="tabpanel" aria-labelledby="tabPaneList">
+							<!-- card temp-->
+							@{
+								var courseTemp = Shared.CloneList(courses);
+								if (filterMajor.Count > 0)
+									courseTemp = courseTemp.Where(x => filterMajor.Contains(x.major_id)).ToList();
+								if(filterLevel.Count > 0)
+								{
+									courseTemp = courseTemp.Where(x => filterLevel.Contains(x.level)).ToList();
+								}
+							}
+							@foreach (var item in courseTemp)
+							{
+								var instructor = instructors.FirstOrDefault(x => x.id == item.instructor);
+								<div class="card hover-zoom tns-item-row m-0">
+									<div class="columns box-shadow is-multiline" style="border-radius: 20px;">
+										<a class="column is-one-quarter" href="/course-detail/@item.id">
+											<div class="card-image">
+												<figure class="image">
+													<img src="./assets/images/upload/@item.image" alt="course">
+												</figure>
+											</div>
+										</a>
+										<div class="column">
+											<div class="media is-justify-content-space-between">
+												<div class="media-content">
+													<p class="title is-6">
+														<a>
+															@item.name
+														</a>
+													</p>
+													<div class="is-flex is-align-items-center">
+														<figure class="image is-32x32 mr-2">
+															<img class="is-rounded"
+																	 src="../assets/images/avatar/Firefly person avatar, realistic female2.jpg"
+																	 alt="avatar">
+														</figure>
+														<p class="subtitle is-6 has-text-light">@instructor.full_name</p>
+													</div>
+												</div>
+												<div class="media-right">
+													<span class="icon has-text-light">
+														<i class="fas fa-bookmark"></i>
+													</span>
+												</div>
+											</div>
+											<div class="content has-text-light">
+												<div class="is-flex is-align-items-center">
+													<time datetime="2016-1-1">3h 56m</time>
+													<span class="icon has-text-warning ml-6">
+														<i class="fas fa-star"></i>
+														<i class="fas fa-star"></i>
+														<i class="fas fa-star"></i>
+														<i class="fas fa-star"></i>
+														<i class="fas fa-star"></i>
+													</span>
+													<span class="has-text-warning ml-6">4.5</span>
+													<span class="ml-2">(7,700)</span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							}
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+@code {
+	[CascadingParameter]
+	public MainLayout Layout { get; set; }
+	private CourseModel courseEdit = new();
+	private bool editCourse = false;
+	private List<MajorModel> majors = new();
+	private List<UserModel> instructors = new();
+	private List<CourseModel> courses = new();
+	private List<StaticModel> levels = new();
+	private List<string> filterMajor = new();
+	private List<int> filterLevel = new();
+
+
+	protected override async Task OnInitializedAsync()
+	{
+		courses = await DbCourse.GetAll();
+		instructors = await DbUser.GetByRole(2);
+		levels = Service.ModuleService.ListLevel();
+		majors = await DbMajor.GetAll();
+	}
+
+	private void FilterMajor(string value)
+	{
+		if (filterMajor.Contains(value))
+			filterMajor.Remove(value);
+		else
+			filterMajor.Add(value);
+	}
+
+	private void FilterLevel(int value)
+	{
+		if (filterLevel.Contains(value))
+			filterLevel.Remove(value);
+		else
+			filterLevel.Add(value);
+	}
+
+	private void SelectAllMajor()
+	{
+		filterMajor.Clear();
+	}
+
+	private void SelectAllLevel()
+	{
+		filterLevel.Clear();
+	}
+}

@@ -1,0 +1,136 @@
+﻿@page "/"
+@inject IJSRuntime JSRuntime
+@inject NavigationManager navigation
+
+<main>
+  <section class="columns" style="margin-top: 0;">
+    <div class="column"
+         style="background-image: url(../assets/images/background/Login\ bg.jpeg); background-size:cover;height: 100vh;">
+    </div>
+    <div class="column is-flex is-align-items-center" style="height:100vh;">
+      <section class="container">
+        <div class="columns is-vcentered is-centered">
+          <div class="column is-three-quarters">
+            <div class="">
+              <div class="card-content">
+                <div class="has-text-centered">
+                  <a href="/homepage">
+                    <img style="width: 20%;"
+                         src="../assets/images/brand/logo/brand-logo2-backgroundRemoved.png"
+                         class="mb-4" alt="logo-icon">
+                  </a>
+                  <h1 class="title has-text-white">Sign in</h1>
+                </div>
+                <div class="form-group field">
+                  <h2 class="has-text-white">Email</h2>
+                  <input @bind="email" type="email" id="email" class="input" 
+                         placeholder="Email address here">
+                  <span class="form-message has-text-danger"></span>
+                </div>
+                <div class="form-group field">
+                  <h2 class=" has-text-white ">Password</h2>
+                  <input @bind="password" type="password" class="input is-flex-grow-1 is-pulled-left"
+                          placeholder="Password">
+                  <span class="form-message has-text-danger"></span>
+                </div>
+                <div class="form-group field is-grouped is-grouped-multiline is-flex is-flex-direction-row is-justify-content-space-between">
+                  <div class="control">
+                  </div>
+                  <div class="control">
+                    <a href="forget-password.html">Forgot your password?</a>
+                  </div>
+                </div>
+								<div>
+                  @if (!string.IsNullOrEmpty(message))
+                  {
+                    <p class="has-text-danger">@message</p>
+                  }
+                </div>
+                <div>
+                  <div class="control is-flex is-justify-content-center">
+                    <a class="button is-primary " @onclick="SignIn">Login</a>
+                  </div>
+                </div>
+                <hr class="my-4">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </section>
+
+
+</main>
+@code {
+  [CascadingParameter]
+  public MainLayout Layout { get; set; }
+
+  private string email;
+  private string password;
+  private string message;
+  private UserModel usermodel = new();
+
+
+  protected override async Task OnInitializedAsync()
+  {
+  }
+
+  protected override async Task OnAfterRenderAsync(bool firstrender)
+  {
+
+    if (firstrender)
+    {
+      var userID = await JSRuntime.InvokeAsync<string>("getCookie", "_user");
+      if (!string.IsNullOrEmpty(userID))
+      {
+        usermodel = await DbUser.GetById(userID);
+        if (usermodel == null)
+        {
+          await JSRuntime.InvokeVoidAsync("deleteCookie", "_user");
+        }
+        else
+        {
+          navigation.NavigateTo("/homepage");
+        }
+      }
+    }
+  }
+
+  protected override void OnParametersSet()
+  {
+  }
+
+
+  private async Task SignIn()
+  {
+      message = null;
+      if (string.IsNullOrEmpty(email))
+      {
+        message = "Tên đăng nhập không được để trống!";
+        return;
+      }
+      if (string.IsNullOrEmpty(password))
+      {
+        message = "Mật khẩu không được để trống!";
+        return;
+      }
+
+      var user = await DbUser.Login(email, password);
+      if (user == null)
+      {
+        message = "Email or Password is wrong!";
+        return;
+      } else
+      {
+        if (!user.active)
+        {
+          message = "Tài khoản đã bị khóa!";
+          return;
+        }
+        Layout.User = user;
+        await JSRuntime.InvokeVoidAsync("setCookie", "_user", user.id);
+        navigation.NavigateTo("/homepage");
+      }
+  }
+}

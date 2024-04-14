@@ -1,0 +1,128 @@
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\runtimes\linux\native\libmongocrypt.so
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\appsettings.Development.json
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\appsettings.json
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\astn_course.staticwebassets.runtime.json
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\astn_course.exe
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\astn_course.deps.json
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\astn_course.runtimeconfig.json
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\astn_course.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\astn_course.pdb
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\AWSSDK.Core.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\AWSSDK.SecurityToken.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\Blazorise.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\Blazorise.Bulma.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\Blazorise.Licensing.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\DnsClient.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\Microsoft.AspNetCore.Authorization.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\Microsoft.AspNetCore.Components.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\Microsoft.AspNetCore.Components.Forms.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\Microsoft.AspNetCore.Components.Web.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\Microsoft.AspNetCore.Metadata.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\Microsoft.Extensions.Logging.Abstractions.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\Microsoft.JSInterop.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\MongoDB.Bson.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\MongoDB.Driver.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\MongoDB.Driver.Core.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\MongoDB.Libmongocrypt.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\Newtonsoft.Json.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\SharpCompress.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\Snappier.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\System.IO.Pipelines.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\ZstdSharp.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\runtimes\osx\native\libmongocrypt.dylib
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\runtimes\win\native\mongocrypt.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\obj\Debug\net6.0\astn_course.csproj.AssemblyReference.cache
+D:\APPLICATION DEVELOPMENT\code\astn_course\obj\Debug\net6.0\astn_course.GeneratedMSBuildEditorConfig.editorconfig
+D:\APPLICATION DEVELOPMENT\code\astn_course\obj\Debug\net6.0\astn_course.AssemblyInfoInputs.cache
+D:\APPLICATION DEVELOPMENT\code\astn_course\obj\Debug\net6.0\astn_course.AssemblyInfo.cs
+D:\APPLICATION DEVELOPMENT\code\astn_course\obj\Debug\net6.0\astn_course.csproj.CoreCompileInputs.cache
+D:\APPLICATION DEVELOPMENT\code\astn_course\obj\Debug\net6.0\astn_course.MvcApplicationPartsAssemblyInfo.cache
+D:\APPLICATION DEVELOPMENT\code\astn_course\obj\Debug\net6.0\astn_course.RazorAssemblyInfo.cache
+D:\APPLICATION DEVELOPMENT\code\astn_course\obj\Debug\net6.0\astn_course.RazorAssemblyInfo.cs
+D:\APPLICATION DEVELOPMENT\code\astn_course\obj\Debug\net6.0\astn_course.sourcelink.json
+D:\APPLICATION DEVELOPMENT\code\astn_course\obj\Debug\net6.0\staticwebassets.build.json
+D:\APPLICATION DEVELOPMENT\code\astn_course\obj\Debug\net6.0\staticwebassets.development.json
+D:\APPLICATION DEVELOPMENT\code\astn_course\obj\Debug\net6.0\staticwebassets\msbuild.astn_course.Microsoft.AspNetCore.StaticWebAssets.props
+D:\APPLICATION DEVELOPMENT\code\astn_course\obj\Debug\net6.0\staticwebassets\msbuild.build.astn_course.props
+D:\APPLICATION DEVELOPMENT\code\astn_course\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.astn_course.props
+D:\APPLICATION DEVELOPMENT\code\astn_course\obj\Debug\net6.0\staticwebassets\msbuild.buildTransitive.astn_course.props
+D:\APPLICATION DEVELOPMENT\code\astn_course\obj\Debug\net6.0\staticwebassets.pack.json
+D:\APPLICATION DEVELOPMENT\code\astn_course\obj\Debug\net6.0\scopedcss\Shared\MainLayout.razor.rz.scp.css
+D:\APPLICATION DEVELOPMENT\code\astn_course\obj\Debug\net6.0\scopedcss\Shared\NavMenu.razor.rz.scp.css
+D:\APPLICATION DEVELOPMENT\code\astn_course\obj\Debug\net6.0\scopedcss\bundle\astn_course.styles.css
+D:\APPLICATION DEVELOPMENT\code\astn_course\obj\Debug\net6.0\scopedcss\projectbundle\astn_course.bundle.scp.css
+D:\APPLICATION DEVELOPMENT\code\astn_course\obj\Debug\net6.0\astn_course.csproj.CopyComplete
+D:\APPLICATION DEVELOPMENT\code\astn_course\obj\Debug\net6.0\astn_course.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\obj\Debug\net6.0\refint\astn_course.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\obj\Debug\net6.0\astn_course.pdb
+D:\APPLICATION DEVELOPMENT\code\astn_course\obj\Debug\net6.0\astn_course.genruntimeconfig.cache
+D:\APPLICATION DEVELOPMENT\code\astn_course\obj\Debug\net6.0\ref\astn_course.dll
+D:\APPLICATION DEVELOPMENT\code\astn_course\bin\Debug\net6.0\CsvHelper.dll
+E:\code\OWLMS\bin\Debug\net6.0\appsettings.Development.json
+E:\code\OWLMS\bin\Debug\net6.0\appsettings.json
+E:\code\OWLMS\bin\Debug\net6.0\Data\dump\astn_course\categorys.metadata.json
+E:\code\OWLMS\bin\Debug\net6.0\Data\dump\astn_course\courses.metadata.json
+E:\code\OWLMS\bin\Debug\net6.0\Data\dump\astn_course\learneds.metadata.json
+E:\code\OWLMS\bin\Debug\net6.0\Data\dump\astn_course\lessons.metadata.json
+E:\code\OWLMS\bin\Debug\net6.0\Data\dump\astn_course\majors.metadata.json
+E:\code\OWLMS\bin\Debug\net6.0\Data\dump\astn_course\users.metadata.json
+E:\code\OWLMS\bin\Debug\net6.0\astn_course.staticwebassets.runtime.json
+E:\code\OWLMS\bin\Debug\net6.0\astn_course.exe
+E:\code\OWLMS\bin\Debug\net6.0\astn_course.deps.json
+E:\code\OWLMS\bin\Debug\net6.0\astn_course.runtimeconfig.json
+E:\code\OWLMS\bin\Debug\net6.0\astn_course.dll
+E:\code\OWLMS\bin\Debug\net6.0\astn_course.pdb
+E:\code\OWLMS\bin\Debug\net6.0\AWSSDK.Core.dll
+E:\code\OWLMS\bin\Debug\net6.0\AWSSDK.SecurityToken.dll
+E:\code\OWLMS\bin\Debug\net6.0\Blazorise.dll
+E:\code\OWLMS\bin\Debug\net6.0\Blazorise.Bulma.dll
+E:\code\OWLMS\bin\Debug\net6.0\Blazorise.Licensing.dll
+E:\code\OWLMS\bin\Debug\net6.0\CsvHelper.dll
+E:\code\OWLMS\bin\Debug\net6.0\DnsClient.dll
+E:\code\OWLMS\bin\Debug\net6.0\Microsoft.AspNetCore.Authorization.dll
+E:\code\OWLMS\bin\Debug\net6.0\Microsoft.AspNetCore.Components.dll
+E:\code\OWLMS\bin\Debug\net6.0\Microsoft.AspNetCore.Components.Forms.dll
+E:\code\OWLMS\bin\Debug\net6.0\Microsoft.AspNetCore.Components.Web.dll
+E:\code\OWLMS\bin\Debug\net6.0\Microsoft.AspNetCore.Metadata.dll
+E:\code\OWLMS\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.dll
+E:\code\OWLMS\bin\Debug\net6.0\Microsoft.Extensions.Logging.Abstractions.dll
+E:\code\OWLMS\bin\Debug\net6.0\Microsoft.JSInterop.dll
+E:\code\OWLMS\bin\Debug\net6.0\MongoDB.Bson.dll
+E:\code\OWLMS\bin\Debug\net6.0\MongoDB.Driver.dll
+E:\code\OWLMS\bin\Debug\net6.0\MongoDB.Driver.Core.dll
+E:\code\OWLMS\bin\Debug\net6.0\MongoDB.Libmongocrypt.dll
+E:\code\OWLMS\bin\Debug\net6.0\Newtonsoft.Json.dll
+E:\code\OWLMS\bin\Debug\net6.0\SharpCompress.dll
+E:\code\OWLMS\bin\Debug\net6.0\Snappier.dll
+E:\code\OWLMS\bin\Debug\net6.0\System.IO.Pipelines.dll
+E:\code\OWLMS\bin\Debug\net6.0\ZstdSharp.dll
+E:\code\OWLMS\bin\Debug\net6.0\runtimes\linux\native\libmongocrypt.so
+E:\code\OWLMS\bin\Debug\net6.0\runtimes\osx\native\libmongocrypt.dylib
+E:\code\OWLMS\bin\Debug\net6.0\runtimes\win\native\mongocrypt.dll
+E:\code\OWLMS\obj\Debug\net6.0\astn_course.csproj.AssemblyReference.cache
+E:\code\OWLMS\obj\Debug\net6.0\astn_course.GeneratedMSBuildEditorConfig.editorconfig
+E:\code\OWLMS\obj\Debug\net6.0\astn_course.AssemblyInfoInputs.cache
+E:\code\OWLMS\obj\Debug\net6.0\astn_course.AssemblyInfo.cs
+E:\code\OWLMS\obj\Debug\net6.0\astn_course.csproj.CoreCompileInputs.cache
+E:\code\OWLMS\obj\Debug\net6.0\astn_course.MvcApplicationPartsAssemblyInfo.cache
+E:\code\OWLMS\obj\Debug\net6.0\astn_course.RazorAssemblyInfo.cache
+E:\code\OWLMS\obj\Debug\net6.0\astn_course.RazorAssemblyInfo.cs
+E:\code\OWLMS\obj\Debug\net6.0\astn_course.sourcelink.json
+E:\code\OWLMS\obj\Debug\net6.0\staticwebassets.build.json
+E:\code\OWLMS\obj\Debug\net6.0\staticwebassets.development.json
+E:\code\OWLMS\obj\Debug\net6.0\staticwebassets\msbuild.astn_course.Microsoft.AspNetCore.StaticWebAssets.props
+E:\code\OWLMS\obj\Debug\net6.0\staticwebassets\msbuild.build.astn_course.props
+E:\code\OWLMS\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.astn_course.props
+E:\code\OWLMS\obj\Debug\net6.0\staticwebassets\msbuild.buildTransitive.astn_course.props
+E:\code\OWLMS\obj\Debug\net6.0\staticwebassets.pack.json
+E:\code\OWLMS\obj\Debug\net6.0\scopedcss\Shared\MainLayout.razor.rz.scp.css
+E:\code\OWLMS\obj\Debug\net6.0\scopedcss\Shared\NavMenu.razor.rz.scp.css
+E:\code\OWLMS\obj\Debug\net6.0\scopedcss\bundle\astn_course.styles.css
+E:\code\OWLMS\obj\Debug\net6.0\scopedcss\projectbundle\astn_course.bundle.scp.css
+E:\code\OWLMS\obj\Debug\net6.0\astn_course.csproj.CopyComplete
+E:\code\OWLMS\obj\Debug\net6.0\astn_course.dll
+E:\code\OWLMS\obj\Debug\net6.0\refint\astn_course.dll
+E:\code\OWLMS\obj\Debug\net6.0\astn_course.pdb
+E:\code\OWLMS\obj\Debug\net6.0\astn_course.genruntimeconfig.cache
+E:\code\OWLMS\obj\Debug\net6.0\ref\astn_course.dll

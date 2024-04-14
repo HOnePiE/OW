@@ -1,0 +1,262 @@
+﻿@page "/admin-major"
+
+<div id="db-wrapper">
+  <!-- navbar vertical -->
+  <!-- Sidebar -->
+  <!-- Page Content -->
+  <_Sidebar></_Sidebar>
+  <main id="page-content">
+    @if (Layout.User != null)
+    {
+      <_Header></_Header>
+    } 
+    <!-- Container fluid -->
+    <section class="container-fluid px-4">
+      <div class="row">
+        <!-- Page Header -->
+        <div class="col-lg-12 col-md-12 col-12">
+          <div class="border-bottom pb-3 mb-3 d-md-flex align-items-center justify-content-between">
+            <div class="mb-3 mb-md-0">
+              <h1 class="mb-1  title is-light">Major</h1>
+              <!-- Breadcrumb -->
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item">
+                    <a>Courses</a>
+                  </li>
+                  <li class="breadcrumb-item active" aria-current="page">Major</li>
+                </ol>
+              </nav>
+            </div>
+            <div>
+              <a @onclick="() => {editMajor = true; majorEdit = new();}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newCatgory">Add New Major</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-12">
+          <!-- Card -->
+          <div class="card mb-4">
+            <!-- Card header -->
+            <div class="card-header border-bottom-0">
+              <!-- Form -->
+              <div class="d-flex align-items-center">
+                <span class="position-absolute ps-3 search-icon">
+                  <i class="fe fe-search"></i>
+                </span>
+                <input @oninput="HandleInput" @onkeypress="SearchMajor" type="text" class="form-control ps-6" placeholder="Search Major">
+              </div>
+            </div>
+            <!-- Table -->
+            <div class="table-responsive border-0 overflow-y-hidden">
+              <table class="table background-darkmode-dark is-fullwidth is-hoverable">
+                <thead style="  background-color: #1e293b ;">
+                  <tr>
+
+                    <th width="30%">Major</th>
+                    <th width="30%">Description</th>
+                    <th width="20%">Date Created</th>
+                    <th width="5%">Active</th>
+                    <th width="15%">Handle</th>
+                  </tr>
+                </thead>
+                <tbody id="user_listing">
+                  @foreach (var major in majors)
+                  {
+                    <tr>
+                      <td>
+                        <p class="">@major.name</p>
+                      </td>
+                      <td>
+                        <p class="">@major.description</p>
+                      </td>
+                      <td>
+                        <p class="">@(new DateTime(major.date_create).ToString("dd/MM/yyyy"))</p>
+                      </td>
+
+                      <td>
+                        @if (major.active)
+                        {
+                          <p>
+                            <a class="has-text-success" @onclick="() => UpdateActive(major, false)">
+                              <i class="fa-solid fa-toggle-on"></i>
+                            </a>
+                          </p>
+                        }
+                        else
+                        {
+                          <p>
+                            <a @onclick="() => UpdateActive(major, true)">
+                              <i class="fa-solid fa-toggle-off"></i>
+                            </a>
+                          </p>
+                        }
+
+                      </td>
+                      <td>
+                        <p>
+                          <span class="icon-text">
+                            <a class="has-text-link" @onclick="() => Edit(major)">
+                              <span class="icon">
+                                <i class="fa-solid fa-pen"></i>
+                              </span>
+                            </a>
+                            <a class="has-text-danger" @onclick="() => {majorEdit = major;  confirmDelete = true; }">
+                              <span class="icon">
+                                <i class="fa-solid fa-trash"></i>
+                              </span>
+                            </a>
+                          </span>
+                        </p>
+                      </td>
+                    </tr>
+
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<!-- Modal -->
+@if (editMajor)
+{
+  <div class="modal is-active " tabindex="-1" role="dialog" aria-labelledby="newCatgoryLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content bg-light">
+        <div class="modal-header">
+          <h4 class="modal-title mb-0 has-text-white" id="newCatgoryLabel">Create New Major</h4>
+          <a @onclick="() => editMajor = false" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></a>
+        </div>
+        <div class="modal-body" style="width: 400px">
+          <div class="needs-validation" novalidate>
+            <div class="mb-3 mb-2">
+              <div class="form-label" for="title">
+                Title
+                <span class="text-danger">*</span>
+              </div>
+              <input @bind="majorEdit.name" type="text" class="form-control" placeholder="Input name of Major" id="title" required />
+              <div class="invalid-feedback">Please enter category.</div>
+            </div>
+            <div class="mb-3 mb-3">
+              <div class="form-label">Description</div>
+              <div id="editor">
+                <textarea @bind="majorEdit.description" type="text" class="form-control" placeholder="Input description" id="title" required />
+              </div>
+            </div>
+
+            <div>
+              <a @onclick="UpdateMajor" class="btn btn-primary">@(majorEdit.id != null ? "Update Major" : "Add New Major")</a>
+              <a @onclick="() => editMajor = false" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+@if (confirmDelete)
+{
+  <div class="modal is-active">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <section class="modal-card-body has-background-white">
+        <p>Bạn chắc chắn xóa tài khoản <strong class="has-text-black">@majorEdit.name</strong></p>
+        <div class="buttons">
+          <a class="button is-danger" @onclick="Delete">Confirm</a>
+          <a class="button" @onclick="() => confirmDelete = false">Cancel</a>
+        </div>
+      </section>
+    </div>
+  </div>
+}
+@code {
+  [CascadingParameter]
+  public MainLayout Layout { get; set; }
+  private bool editMajor = false;
+  private MajorModel majorEdit = new();
+  private List<MajorModel> majors = new();
+  private List<MajorModel> majorsTemp = new();
+
+  private string message;
+  private string searchMajor;
+
+  protected override async Task OnInitializedAsync()
+  {
+    majors = await DbMajor.GetAll();
+    majorsTemp = Shared.CloneList(majors);
+  }
+  private async Task OpenForm()
+  {
+    editMajor = true;
+    majorEdit = new();
+  }
+
+  private bool confirmDelete;
+
+  private async Task UpdateMajor()
+  {
+    if (string.IsNullOrEmpty(majorEdit.name))
+    {
+      message = "Vui lòng nhập name";
+      return;
+    }
+
+    if (string.IsNullOrEmpty(majorEdit.id))
+    {
+      majorEdit.date_create = DateTime.Today.Ticks;
+      majorEdit.active = true;
+      await DbMajor.Create(majorEdit);
+      message = "Tạo thành công";
+      majors = await DbMajor.GetAll();
+      editMajor = false;
+    } 
+    else
+    {
+      await DbMajor.Update(majorEdit);
+      message = "Update thành công";
+      majors = await DbMajor.GetAll();
+      editMajor = false;
+    }
+  }
+
+  private async void UpdateActive(MajorModel major, bool value)
+  {
+    major.active = value;
+    await DbMajor.Update(major);
+  }
+
+  private async Task Edit(MajorModel model)
+  {
+    editMajor = true;
+    majorEdit = Shared.Clone(model);
+  }
+
+  private async Task Delete()
+  {
+    await DbMajor.Delete(majorEdit.id);
+    confirmDelete = false;
+    majors.Remove(majorEdit);
+  }
+
+  void HandleInput(ChangeEventArgs e)
+  {
+    searchMajor = e.Value.ToString();
+  }
+
+  private void SearchMajor(KeyboardEventArgs e)
+  {
+    if (e.Key == "Enter")
+    {
+      if (string.IsNullOrEmpty(searchMajor))
+        majors = Shared.CloneList(majorsTemp);
+      else
+        majors = majorsTemp.Where(x => x.name.ToLower().Contains(searchMajor)).ToList();
+    }
+  }
+}

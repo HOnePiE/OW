@@ -1,0 +1,662 @@
+﻿@page "/admin-student"
+@inject IWebHostEnvironment WebHostEnvironment
+@inject IJSRuntime JSRuntime
+
+
+<div id="db-wrapper">
+	<!-- navbar vertical -->
+	<!-- Sidebar -->
+	<_Sidebar></_Sidebar>
+	<!-- Page Content -->
+	<main id="page-content">
+		@if(Layout.User != null)
+		{
+			<_Header></_Header>
+		}
+		<!-- Container fluid -->
+		@if (!editStudent)
+		{
+			<section class="container-fluid px-4">
+				<div class="row">
+					<!-- Page Header -->
+					<div class="col-lg-12 col-md-12 col-12">
+						<div class="border-bottom pb-3 mb-3 d-flex justify-content-between align-items-center">
+							<div class="mb-2 mb-lg-0">
+								<h1 class="mb-1  title is-light">
+									Student
+									<span class="fs-5">@(users.Count > 0 ? $"({users.Count})" : "")</span>
+								</h1>
+								<!-- Breadcrumb  -->
+								<nav aria-label="breadcrumb">
+									<ol class="breadcrumb">
+										<li class="breadcrumb-item">
+											<a href="../dashboard/admin-dashboard.html">Dashboard</a>
+										</li>
+										<li class="breadcrumb-item"><a href="#">User</a></li>
+									</ol>
+								</nav>
+							</div>
+							<div class="nav btn-group" role="tablist">
+								<a @onclick="AddInstructor" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newCatgory">Add New Student</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-12 col-md-12 col-12">
+						<!-- Tab -->
+						<div class="tab-content">
+							<!-- Tab pane -->
+							<div class="tab-pane fade show active" id="tabPaneGrid" role="tabpanel"
+									 aria-labelledby="tabPaneGrid">
+
+								<div class="row">
+									<div class="col-lg-12 col-md-12 col-12">
+										<div class="card mb-4">
+											<div class="card-header border-bottom-0">
+												<div class="d-flex align-items-center">
+													<span class="position-absolute ps-3 search-icon"><i class="fe fe-search"></i></span>
+													<input @oninput="HandleInput" @onkeypress="SearchStudent" type="text" class="form-control ps-6" placeholder="Search Student">
+												</div>
+											</div>
+
+											<div class="table-responsive border-0 overflow-y-hidden">
+												<table class="table background-darkmode-dark is-fullwidth is-hoverable">
+													<thead style="  background-color: #1e293b ;">
+														<tr>
+
+															<th width="30%">Instructor</th>
+															<th width="30%">Email</th>
+															<th width="20%">Date Created</th>
+															<th width="5%">Active</th>
+															<th width="15%">Handle</th>
+														</tr>
+													</thead>
+													<tbody id="user_listing">
+														<!-- user item -->
+														@foreach (var student in users)
+														{
+															<tr @onclick="() => UserDetail(student)">
+																<td>
+																	<p class="">@student.full_name</p>
+																</td>
+																<td>
+																	<p class="">@student.email</p>
+																</td>
+																<td>
+																	<p class="">@(new DateTime(student.date_create).ToString("dd/MM/yyyy"))</p>
+																</td>
+																<td>
+																	@if (student.active)
+																	{
+																		<p>
+																			<a class="has-text-success" @onclick="() => UpdateActive(student, false)">
+																				<i class="fa-solid fa-toggle-on"></i>
+																			</a>
+																		</p>
+																	}
+																	else
+																	{
+																		<p>
+																			<a @onclick="() => UpdateActive(student, true)">
+																				<i class="fa-solid fa-toggle-off"></i>
+																			</a>
+																		</p>
+																	}
+
+																</td>
+																<td>
+																	<p>
+																		<span class="icon-text">
+																			<a class="has-text-link" @onclick="() => Edit(student)">
+																				<span class="icon">
+																					<i class="fa-solid fa-pen"></i>
+																				</span>
+																			</a>
+																			<a class="has-text-danger" @onclick="() => {userEdit = student;  confirmDelete = true; }">
+																				<span class="icon">
+																					<i class="fa-solid fa-trash"></i>
+																				</span>
+																			</a>
+																		</span>
+																	</p>
+																</td>
+															</tr>
+
+														}
+
+														<!-- more user items... -->
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>						<!-- tab pane -->
+						</div>
+					</div>
+				</div>
+			</section>
+		}
+		else
+		{
+			<div class="has-text-dark " data-theme="dark">
+				<section class="section p-4">
+					<div class="container">
+						<div class="columns">
+							<div class="column is-offset-1 is-10">
+								<div class="columns is-vcentered is-justify-content-space-between">
+									<!-- Content -->
+									<div class="mb-lg-0 pb-4 pt-4">
+										<h1 class="title is-light">Add New Account</h1>
+									</div>
+									<div class="buttons">
+										<a @onclick="() => editStudent = false" class="button">Back to Course</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+				<!-- Page Content -->
+				<section class="section p-2">
+					<div class="container">
+						<div class="columns is-centered">
+							<div class="column is-10">
+
+								<!-- Stepper content -->
+								<div>
+									<div class="tab-content">
+										<!-- Content one -->
+										<div class="content ">
+											<!-- Card -->
+											<div class="field">
+												<p class="is-6 has-text-white has-text-weight-bold">Email</p>
+												<div class="control">
+													<input @bind="userEdit.email" class="input" type="email" id="email" name="email" required="">
+												</div>
+											</div>
+
+											<div class="field">
+												<p class="is-6 has-text-white has-text-weight-bold"> First Name  </p>
+												<div class="control">
+													<input @bind="userEdit.first_name" class="input" type="text" name="firstname" required="">
+												</div>
+											</div>
+
+											<div class="field">
+												<p class="is-6 has-text-white has-text-weight-bold">Last Name </p>
+												<div class="control">
+													<input @bind="userEdit.last_name" class="input" type="text" required="">
+												</div>
+											</div>
+
+											<div class="field">
+												<p class="is-6 has-text-white has-text-weight-bold">Password </p>
+												<div class="control">
+													<input @bind="userEdit.password" class="input" type="password"  required="">
+												</div>
+											</div>
+
+											@if (!checkValidate && !string.IsNullOrEmpty(message))
+											{
+												<div class="has-text-danger">
+													<p>@message</p>
+												</div>
+											}
+											else
+											{
+												<div class="has-text-success">
+													<p>@message</p>
+												</div>
+											}
+
+											<div class="field is-flex pt-2">
+												<div class="control is-right">
+													<a @onclick="UpdateAccount" class="button is-link" type="submit">Add Account</a>
+													<a @onclick="() => importFile = true" class="button is-link" type="submit">Import File CSV</a>
+												</div>
+											</div>
+										</div>
+										<!-- Content two -->
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+			</div>
+		}
+		@if (confirmDelete)
+		{
+			<div class="modal is-active">
+				<div class="modal-background"></div>
+				<div class="modal-card">
+					<section class="modal-card-body has-background-white">
+						<p>Bạn chắc chắn xóa tài khoản <strong class="has-text-black">@userEdit.full_name</strong></p>
+						<div class="buttons">
+							<a class="button is-danger" @onclick="Delete">Confirm</a>
+							<a class="button" @onclick="() => confirmDelete = false">Cancel</a>
+						</div>
+					</section>
+				</div>
+			</div>
+		}
+	</main>
+</div>
+
+@if (userdetail)
+{
+	<div class="modal is-active" style="font-weight: 500; font-size: 1.25rem;">
+		<div class="modal-background"></div>
+		<div class="modal-content" style="width: 90%;; overflow: hidden;border-radius: 6px;">
+			<div class="" style="width: 100%; display: inline-block; overflow:hidden;">
+				<section class="section background-darkmode-light" style="width: 100%; height: 100%;">
+					<div class=" is-flex justify-content-between is-fullwidth">
+						<h1 class=" title is-5 primary-color">Personal Information</h1>
+						<a @onclick="() => userdetail = false">
+							<i class="fa-solid fa-xmark"></i>
+						</a>
+					</div>
+					<div class="columns" style="width: 100%;">
+						<div class="column box-shadow background-darkmode-dark" style="border-radius: 6px;">
+							<div class="">
+								<div class="is-flex is-justify-content-center">
+									<figure class="media-left">
+										<p class="image" style="width: 70px;">
+											<img src="../../assets/images/avatar/Firefly person avatar, realistic female1.jpg"
+													 alt="" class="is-rounded">
+										</p>
+									</figure>
+								</div>
+								<div class=" field">
+									<label class="is-size-6">Email</label>
+									<div class="control">
+										<input class="input" type="text" value="@userEdit.email" readonly>
+									</div>
+								</div>
+								<div class=" field">
+									<label class="is-size-6">Date Join</label>
+									<div class="control">
+										<input class="input" type="text" value=" @(new DateTime(userEdit.date_create).ToString("dd/MM/yyyy"))" readonly>
+									</div>
+								</div>
+								<div class=" field">
+									<label class="is-size-6">Major</label>
+									<div class="control">
+										@if (majors.Count > 0)
+										{
+											@foreach (var major in majors)
+											{
+												if (userEdit.major == major.id)
+												{
+													<input class="input" value="@major.name" readonly>
+												}
+											}
+										}
+										@if (string.IsNullOrEmpty(userEdit.major))
+										{
+											<input class="input" value="" readonly>
+										}
+									</div>
+								</div>
+								<div class=" field">
+									<label class="is-size-6">Rating</label>
+									<div class="control">
+										<input class="input" type="tel" value="@userEdit.level" readonly>
+									</div>
+								</div>
+								<!-- more items here -->
+							</div>
+						</div>
+
+						<div class="column is-three-quarters fixed-grid has-2-cols">
+							<div class="grid">
+								<!-- max 8 items -->
+								<div class="cell field">
+									<label class="background-darkmode-light is-size-6">First Name</label>
+									<div class="control">
+										<input class="input background-darkmode-light" type="text"
+													 value="@userEdit.first_name" readonly>
+									</div>
+								</div>
+								<div class="cell field">
+									<label class="background-darkmode-light is-size-6">Last Name </label>
+									<div class="control">
+										<input class="input background-darkmode-light" type="email"
+													 value="@userEdit.last_name" readonly>
+									</div>
+								</div>
+								<div class="cell field">
+									<label class="background-darkmode-light is-size-6">Phone Number</label>
+									<div class="control">
+										<input class="input background-darkmode-light" type="tel" value="@userEdit.phone_number"
+													 readonly>
+									</div>
+								</div>
+								<div class="cell field">
+									<label class="background-darkmode-light is-size-6">Permanent Address</label>
+									<div class="control">
+										<input class="input background-darkmode-light" type="text"
+													 value="@userEdit.address" readonly>
+									</div>
+								</div>
+								<div class="cell field">
+									<label class="background-darkmode-light is-size-6">
+										Place of Birth /
+										Hometown
+									</label>
+									<div class="control">
+										<input class="input background-darkmode-light" type="text"
+													 value="@userEdit.hometown" readonly>
+									</div>
+								</div>
+								<div class="cell field">
+									<label class="background-darkmode-light is-size-6">
+										Birthday
+									</label>
+									<div class="control">
+										<input class="input background-darkmode-light" type="text"
+													 value="@userEdit.birthday" readonly>
+									</div>
+								</div>
+								<div class="cell field">
+									<label class="background-darkmode-light is-size-6">
+										School
+									</label>
+									<div class="control">
+										<input class="input background-darkmode-light" type="text"
+													 value="@userEdit.school" readonly>
+									</div>
+								</div>
+
+								<div class="cell field">
+									<label class="background-darkmode-light is-size-6">Gender</label>
+									<div class="control">
+										@if (genders.Count > 0)
+										{
+											@foreach (var gender in genders)
+											{
+												if (userEdit.gender == gender.id)
+												{
+													<input class="input background-darkmode-light" value="@gender.name" readonly>
+												}
+											}
+										}
+										@if (userEdit.gender == 0)
+										{
+											<input class="input background-darkmode-light" value="" readonly>
+										}
+									</div>
+								</div>
+								<div class="cell field">
+									<label class="background-darkmode-light is-size-6">Ethnicity</label>
+									<div class="control">
+										<input class="input background-darkmode-light" type="text" value="@userEdit.ethnicity"
+													 readonly>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- more column here -->
+				</section>
+			</div>
+		</div>
+	</div>
+}
+
+@if (importFile)
+{
+	<div class="modal is-active " tabindex="-1" role="dialog" aria-labelledby="newCatgoryLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+			<div class="modal-content bg-light">
+				<div class="modal-header">
+					<h4 class="modal-title mb-0 has-text-white" id="newCatgoryLabel">Import File CSV</h4>
+					<a type="button" class="btn-close" aria-label="Close"></a>
+				</div>
+				<div class="modal-body" style="width: 400px">
+					<div class="needs-validation" novalidate>
+						<div class="mb-3 mb-2">
+							<div class="form-label" for="title">
+								Title
+								<span class="text-danger">*</span>
+							</div>
+							<InputFile class="" OnChange="HanldeFileCSV" multiple />
+						</div>
+
+						<div>
+							<a @onclick="ImportFile" class="btn btn-primary">Import</a>
+							<a @onclick="() => importFile = false" type="button" class="btn btn-secondary danger">Close</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+
+@code {
+	[CascadingParameter]
+	public MainLayout Layout { get; set; }
+	private UserModel userEdit = new();
+	private List<UserModel> users = new();
+	private List<UserModel> usersTemp = new();
+	private List<StaticModel> listRole = new();
+	private List<StaticModel> genders = new();
+	private List<MajorModel> majors = new();
+	private bool editStudent = false;
+	private bool checkValidate;
+	private string message;
+	private string error;
+	private string tempPassword;
+	private bool confirmDelete = false;
+	private bool userdetail = false;
+	private string searchStudent;
+	private IBrowserFile file;
+	private string filePath;
+	private long maxFileSize = 1024 * 2048;
+	private List<AuthModel> studentImport = new();
+	private bool importFile;
+
+	protected override async Task OnInitializedAsync()
+	{
+		majors = await DbMajor.GetAll();
+		genders = new()
+		{
+			new StaticModel
+			{
+				id = 1,
+				name = "Male",
+			},
+			new StaticModel
+			{
+				id = 2,
+				name = "Female",
+			},
+			new StaticModel
+			{
+				id = 3,
+				name = "Other",
+			},
+		};
+		users = await DbUser.GetAll();
+		users = users.Where(x => x.role == 0).ToList();
+		usersTemp = Shared.CloneList(users);
+		listRole = new List<StaticModel>
+		{
+			new StaticModel
+			{
+				id = 1,
+				name = "Administrator",
+			},
+			new StaticModel
+			{
+				id = 2,
+				name = "Instructor",
+			},
+		};
+	}
+
+	private void ChangerRole(ChangeEventArgs e)
+	{
+		var role = int.Parse(e.Value.ToString());
+	}
+
+	private async Task<bool> UpdateAccount()
+	{
+		checkValidate = false;
+		if (string.IsNullOrEmpty(userEdit.email))
+		{
+			message = "Please input Email";
+			return false;
+		}
+		if (string.IsNullOrEmpty(userEdit.first_name))
+		{
+			message = "Please input First Name";
+			return false;
+		}
+		if (string.IsNullOrEmpty(userEdit.last_name))
+		{
+			message = "Please input Last Name";
+			return false;
+		}
+		if (string.IsNullOrEmpty(userEdit.password))
+		{
+			message = "Please input Password";
+			return false;
+		}
+		if (string.IsNullOrEmpty(userEdit.id))
+		{
+			userEdit.date_create = DateTime.Today.Ticks;
+			users.Add(userEdit);
+			await DbUser.Create(userEdit);
+			message = "Create Account Successfull";
+			userEdit = new();
+			checkValidate = true;
+			editStudent = false;
+		}
+		else
+		{
+			if (tempPassword != userEdit.password)
+			{
+				userEdit.password = Handled.Shared.CreateMD5(userEdit.password);
+			}
+			await DbUser.Update(userEdit);
+			message = "Update Account Successfull";
+			userEdit = new();
+			checkValidate = true;
+			editStudent = false;
+			users = await DbUser.GetAll();
+		}
+
+		return true;
+	}
+
+	private async void UpdateActive(UserModel user, bool value)
+	{
+		user.active = value;
+		await DbUser.Update(user);
+	}
+
+	private async Task Edit(UserModel model)
+	{
+		editStudent = true;
+		userEdit = Shared.Clone(model);
+		tempPassword = model.password;
+	}
+
+	private async Task Delete()
+	{
+		await DbUser.Delete(userEdit.id);
+		confirmDelete = false;
+		users.Remove(userEdit);
+	}
+
+	private async void AddInstructor()
+	{
+		editStudent = true;
+		userEdit = new();
+		userEdit.role = 0;
+		userEdit.active = true;
+	}
+
+	private void UserDetail(UserModel model)
+	{
+		userdetail = true;
+		userEdit = model;
+	}
+
+	private void HandleInput(ChangeEventArgs e)
+	{
+		searchStudent = e.Value.ToString();
+	}
+
+	private void SearchStudent(KeyboardEventArgs e)
+	{
+		if (e.Key == "Enter")
+		{
+			if (string.IsNullOrEmpty(searchStudent))
+				users = Shared.CloneList(usersTemp);
+			else
+				users = usersTemp.Where(x => x.full_name.ToLower().Contains(searchStudent)).ToList();
+		}
+	}
+
+	private async Task HanldeFileCSV(InputFileChangeEventArgs e)
+	{
+		file = e.File;
+
+		// Kiểm tra xem có file được chọn không
+		if (file != null)
+		{
+			// Tạo đường dẫn đến thư mục upload
+			var uploadFolder = Path.Combine(WebHostEnvironment.WebRootPath, "assets", "filesCSV");
+
+			// Tạo thư mục upload nếu chưa tồn tại
+			if (!Directory.Exists(uploadFolder))
+			{
+				Directory.CreateDirectory(uploadFolder);
+			}
+
+			// Tạo đường dẫn đến tập tin lưu trữ
+			filePath = Path.Combine(uploadFolder, file.Name);
+		}
+	}
+
+	private async Task ImportFile()
+	{
+		if (!file.Name.Contains("csv"))
+		{
+			error = "File you choose is not file CSV!!";
+			return;
+		}
+
+		using (var fileStream = new FileStream(filePath, FileMode.Create))
+		{
+			await file.OpenReadStream(maxFileSize).CopyToAsync(fileStream);
+		}
+
+		studentImport = await ModuleService.GetModelsAsync(filePath);
+		foreach(var item in studentImport)
+		{
+			UserModel model = new();
+			model.first_name = item.first_name;
+			model.last_name = item.last_name;
+			model.email = item.email;
+			model.password = "123";
+			model.active = true;
+			model.date_create = DateTime.Today.Ticks;
+			await DbUser.Create(model);
+		}
+
+		users = await DbUser.GetAll();
+		users = users.Where(x => x.role == 0).ToList();
+		importFile = false;
+
+	}
+
+
+}

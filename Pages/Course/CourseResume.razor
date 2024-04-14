@@ -1,0 +1,363 @@
+﻿@page "/course-resume/{id}"
+@using System.Text.Json
+@inject IJSRuntime JSRuntime
+@inject NavigationManager navigtion
+
+<!-- Page content -->
+<div class="text-dark">
+		<Header></Header>
+  @if(lesson != null)
+  {
+    <section class="card course-sidebar background-darkmode-light" id="courseAccordion">
+      <section class="card course-sidebar background-darkmode-light" id="courseAccordion">
+        <!-- List group -->
+        <!-- List group -->
+        <aside class="menu" style="height: 100%" data-simplebar>
+          <p class="menu-label title p-4 m-0 has-text-primary-light  has-text-centered background-darkmode-dark" style="position: sticky; top:0;">
+            Table of Content
+          </p>
+          <ul class="menu-list p-0">
+            <!-- List Group item -->
+            <li class="menu-list-item ">
+              @* <a class="has-dropdown toggle-collapse is-active primary-color is-flex is-justify-content-space-between">
+                <span class="tag background-color has-text-black">1</span>
+                <span class="has-text-weight-bold">Introduction to JavaScript</span>
+                <span class="chevron-arrow ms-4">
+                  <i class="fe fe-chevron-down fs-4"></i>
+                </span>
+              </a> *@
+              <ul class="collapse-content ">
+                @foreach (var item in lessons)
+                {
+                  var lesson_learned = learned.lessons.FirstOrDefault(x => x.id == item.id);
+                  var check = lesson_learned != null && lesson_learned.done;
+                  <li class="@(lesson.id == item.id ? "background-darkmode-dark" : "")" style="border-radius: 4px">
+                    <a @onclick="() => ChangeLesson(item)" class="menu-link is-flex is-justify-content-space-between @(check ? "has-text-success " : "")">
+                      <div class="flex-content text_course">
+
+                        @if (check)
+                        {
+                        <span class="icon">
+                          <a @onclick="() => UpdateStatusLesson(item.id)" class="has-text-success">
+                            <i class="fa-regular fa-square-check"></i>
+                          </a>
+                        </span>
+                        }
+                        else 
+                        {
+                          <span class="icon">
+                            <a class="" @onclick="() => UpdateStatusLesson(item.id)">
+                              <i class="fa-regular fa-square"></i>
+                            </a>
+                          </span>
+                        }
+                        <span class="icon"><i class="fe fe-play fs-6"></i></span>
+                        <span>@item.name</span>
+                      </div>
+                      <div class="is-flex is-align-items-center" style="font-size:14px">
+                        <span>@item.time</span>
+                      </div>
+                    </a>
+                  </li>
+                }
+                <!-- add more items here -->
+              </ul>
+            </li>
+            <!-- List Group item -->
+          </ul>
+        </aside>
+
+      </section>
+      </section>
+    <section class="card course-container">
+      <!--lecture content -->
+      <div class="tab-content " id="course-tabContent" style="overflow: scroll">
+        <div class="is-flex is-justify-content-space-between p-2" style="height: 46.3px;">
+          <a class="sidebar-hide navbar-item" href="#">
+            <i class="fas fa-bars"></i>
+          </a>
+          <div>
+            <h3 class="title primary-color is-3 mb-0">@lesson.name</h3>
+          </div>
+          <div class="is-flex is-vcentered">
+            <a href="#" id="dropdownInfo">
+              <span class="icon">
+                <i class="fe fe-help-circle"></i>
+              </span>
+            </a>
+            <a href="#" role="button" id="shareDropdown2">
+              <span class="icon">
+                <i class="fe fe-more-vertical"></i>
+              </span>
+            </a>
+          </div>
+        </div>
+        <!-- lecture Video -->
+        <figure class="image video-ratio" style="height:82%;">
+          <iframe src="@lesson.video"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen>
+          </iframe>
+        </figure>
+        <!-- lecture infor -->
+        <div class="section">
+          <div class="container">
+            <div class="">
+              <div class="mb-2">
+                <div class="is-flex is-align-items-center is-justify-content-space-between mb-2">
+                  <h1 class="title has-text-centered m-0 is-4">Description</h1>
+                  <a @onclick="OpenRate" class="button is-warning js-modal-trigger"
+                          data-target="course-rating">
+                    Rate this course
+                  </a>
+
+                </div>
+                <p style="line-height: 1.75rem;">
+                  @lesson.description
+                </p>
+              </div>
+              <div class="">
+                <h1 class="title is-4">Leave a Comment</h1>
+                <form>
+                  <div class="field">
+                    <label class="label">Comment</label>
+                    <div class="control">
+                      <textarea class="textarea background-darkmode-dark"
+                                placeholder="Your Comment"></textarea>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <div class="control">
+                      <button class="button is-link">Post</button>
+                    </div>
+                  </div>
+                </form>
+                <div class="user-comment mt-4">
+                  <!-- comments of user -->
+                  <article class="media">
+                    <figure class="media-left mr-2">
+                      <p class="image is-64x64">
+                        <img src="../assets/images/avatar/Firefly person avatar, realistic female1.jpg"
+                             alt="" class="is-rounded
+                                        ">
+                      </p>
+                    </figure>
+                    <div class="media-content">
+                      <div class="content">
+                        <p>
+                          <strong>Barbara Middleton</strong>
+                          <br />
+                          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis
+                          porta eros
+                          lacus, nec ultricies elit blandit non. Suspendisse pellentesque
+                          mauris
+                          sit amet dolor blandit rutrum. Nunc in tempus turpis.
+                          <br />
+                          <small><a>Like</a> · <a>Reply</a> · 3 hrs</small>
+                        </p>
+                      </div>
+
+                      <article class="media">
+                        <figure class="mr-2">
+                          <p class="image is-64x64">
+                            <img src="../assets/images/avatar/Firefly person avatar, realistic female1.jpg"
+                                 alt="" class="is-rounded
+                                                ">
+                          </p>
+                        </figure>
+                        <div class="media-content">
+                          <div class="content">
+                            <p>
+                              <strong>Sean Brown</strong>
+                              <br />
+                              Donec sollicitudin urna eget eros malesuada sagittis.
+                              Pellentesque
+                              habitant morbi tristique senectus et netus et malesuada
+                              fames ac
+                              turpis egestas. Aliquam blandit nisl a nulla sagittis, a
+                              lobortis
+                              leo feugiat.
+                              <br />
+                              <small><a>Like</a> · <a>Reply</a> · 2 hrs</small>
+                            </p>
+                          </div>
+                        </div>
+                      </article>
+
+                      <article class="media">
+                        <figure class="mr-2">
+                          <p class="image is-64x64">
+                            <img src="../assets/images/avatar/Firefly person avatar, realistic female1.jpg"
+                                 alt="" class="is-rounded
+                                                ">
+                          </p>
+                        </figure>
+                        <div class="media-content">
+                          <div class="content">
+                            <p>
+                              <strong>Kayli Eunice </strong>
+                              <br />
+                              Sed convallis scelerisque mauris, non pulvinar nunc
+                              mattis vel.
+                              Maecenas varius felis sit amet magna vestibulum euismod
+                              malesuada
+                              cursus libero. Vestibulum ante ipsum primis in faucibus
+                              orci luctus
+                              et ultrices posuere cubilia Curae; Phasellus lacinia non
+                              nisl id
+                              feugiat.
+                              <br />
+                              <small><a>Like</a> · <a>Reply</a> · 2 hrs</small>
+                            </p>
+                          </div>
+                        </div>
+                      </article>
+                    </div>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  }
+    <!-- Modal -->
+    <div id="course-rating" class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        <section class="section background-darkmode-dark" style="border-radius: 20px;">
+          <div class="is-flex is-justify-content-center">
+            <span class="has-text-warning">
+              <i class="fa-solid fa-star fa-2x"></i>
+              <i class="fa-regular fa-star fa-2x"></i>
+              <i class="fa-regular fa-star fa-2x"></i>
+              <i class="fa-regular fa-star fa-2x"></i>
+              <i class="fa-regular fa-star fa-2x"></i>
+            </span>
+          </div>
+          <div class="field">
+            <label class="label has-text-light">Your Review</label>
+            <div class="control">
+              <textarea class="textarea background-darkmode-dark"
+                        placeholder="Your Review"></textarea>
+            </div>
+          </div>
+          <div class="field">
+            <div class="control">
+              <button class="button is-link">Post</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+</div>
+  
+@if (rate)
+{
+  <div id="course-rating" class="modal is-active">
+    <div class="modal-background"></div>
+    <div class="modal-content" style="width: 40%">
+      <section class="section background-darkmode-dark" style="border-radius: 20px;">
+        <div class="is-flex is-justify-content-center">
+          <span class="modal-rating has-text-warning">
+            <i class="fa-solid fa-star fa-2x"></i>
+            <i class="fa-regular fa-star fa-2x"></i>
+            <i class="fa-regular fa-star fa-2x"></i>
+            <i class="fa-regular fa-star fa-2x"></i>
+            <i class="fa-regular fa-star fa-2x"></i>
+          </span>
+        </div>
+        <div class="field">
+          <label class="label has-text-light">Your Review</label>
+          <div class="control">
+            <textarea class="textarea background-darkmode-dark"
+                      placeholder="Your Review"></textarea>
+          </div>
+        </div>
+        <div class="field">
+          <div class="control">
+            <button class="button is-link">Post</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+}
+@code {
+  [CascadingParameter]
+  public MainLayout Layout { get; set; }
+
+  private LessonModel lesson;
+
+  private List<LessonModel> lessons = new();
+  private LearnedModel learned = new();
+  private bool rate;
+
+  [Parameter]
+  public string id { get; set; }
+
+  protected override async Task OnInitializedAsync()
+  {
+    lessons = await DbLesson.GetAllByCourse(id);
+    lesson = lessons.FirstOrDefault(x => true);
+    learned = await DbLearned.GetById(id);
+  }
+
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    if(Layout.User != null)
+    {
+      if (!Layout.User.courses.Contains(id))
+      {
+        navigtion.NavigateTo("shope-course");
+      }
+    }
+    
+  }
+
+  private async void ChangeLesson(LessonModel model)
+  {
+    lesson = model;
+    if (learned.lessons.FirstOrDefault(x => x.id == id) == null)
+    {
+      LearnedModel.Lesson lesson_learned = new();
+      lesson_learned.id = model.id;
+      lesson_learned.date = DateTime.Now.Ticks;
+      learned.lessons.Add(lesson_learned);
+      await DbLearned.Update(learned);
+    }
+  }
+
+  private async void OpenRate()
+  {
+    rate = true;
+    await JSRuntime.InvokeVoidAsync("RateCourse", null);
+  }
+
+  private async void UpdateStatusLesson(string id)
+  {
+    if(learned.lessons.FirstOrDefault(x => x.id == id) == null)
+    {
+      LearnedModel.Lesson lesson_learned = new();
+      lesson_learned.id = id;
+      lesson_learned.date = DateTime.Now.Ticks;
+      learned.lessons.Add(lesson_learned);
+      await DbLearned.Update(learned);
+    } else
+    {
+      var lesson_learned = learned.lessons.FirstOrDefault(x => x.id == id);
+      lesson_learned.done = !lesson_learned.done;
+      learned.lessons = learned.lessons.Select(x => x.id == lesson_learned.id ? lesson_learned : x).ToList();
+      await DbLearned.Update(learned);
+    }
+  }
+
+  [JSInvokable]
+  public async Task GetLocation(JsonElement json)
+  {
+    int numberValue = json.GetInt32();
+  }
+}

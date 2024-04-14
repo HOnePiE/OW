@@ -1,0 +1,658 @@
+﻿@page "/course-detail/{id}"
+@inject NavigationManager navigation
+<PageTitle>@_title</PageTitle>
+	<div class="text-dark">
+		<Header></Header>
+		@if (course != null && Layout.User != null)
+	{
+    <main>
+      <!-- Page header -->
+      <!-- Page header -->
+      <section class="section" style="
+            background-image: url(../assets/images/background/Firefly\ abstract\,\ watercolor\,\ galaxy;\ light\ 10819.jpg);background-size: cover;">
+        <div class="container">
+          <div class="columns is-vcentered">
+            <div class="column is-three-quarters">
+              <div class="content has-text-black">
+                <h1 class="title is-1 pb-3 text-shadow">Getting Started with @course.name</h1>
+                <p class="subtitle is-5 has-text-white">
+                  JavaScript is a powerful and flexible programming language used to create
+                  interactive and featured websites. It is built in all modern web browsers, allowing
+                  developers to add functions and behaviors into their websites.
+                </p>
+                <div class="level has-text-white">
+                  <a  class="level-item is-justify-content-start has-text-white">
+                    <span class="icon is-medium "><i class="fas fa-bookmark"></i></span>
+                    <span >Bookmark</span>
+                  </a>
+                  <div class="level-item is-justify-content-start">
+                    <span class="icon is-medium"><i class="fas fa-user"></i></span>
+                    <span>1200 Enrolled</span>
+                  </div>
+                  <div class="level-item is-justify-content-start">
+                    <span class="icon is-medium has-text-warning">
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                    </span>
+                    <span class="ml-6">(140)</span>
+                  </div>
+                  <div class="level-item is-justify-content-start">
+                    <span class="icon is-medium"><i class="fas fa-chart-bar"></i></span>
+                    <span>Intermediate</span>
+                  </div>
+                </div>
+                <div class="">
+                  <!-- Card body -->
+                  @if(lessons.Count > 0)
+                  {
+                    @if (course.members.Contains(Layout.User.id))
+                    {
+                      <div class="">
+                        <a href="/course-resume/@course.id" id="enroll-course-button"
+                           class="button is-primary pr-6 pl-6 js-modal-trigger"
+                           data-target="enrollment-modal">Get Start</a>
+                      </div>
+                    }
+                    else
+                    {
+                      <div class="">
+                        <a @onclick="() => inputKey = true" id="enroll-course-button"
+                           class="button is-danger pr-6 pl-6 js-modal-trigger"
+                           data-target="enrollment-modal">Enroll</a>
+                      </div>
+                    }
+                  } else
+                  {
+                    <div class="has-text-danger"> <strong>Note: </strong>We are about to announce the course content. Please wait until we complete this course content.</div>
+                  }
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Page content -->
+      <section class="pb-8">
+        <div class="container is-fluid">
+          <div class="columns">
+            <div class="column is-three-fifths">
+              <!-- Card -->
+              <div class="card rounded-3">
+                <!-- Card Body -->
+                <div class="card-body p-0">
+                  <div class="tab-content" id="tabContent">
+                    <!-- Contents -->
+                    @if (lessons.Count > 0)
+                    {
+                      <div class="course-infor" id="table" role="tabpanel"
+                           aria-labelledby="table-tab">
+                        <!-- Card -->
+                        <div class="accordion" id="courseAccordion">
+                          <div>
+                            <h3 class="title is-4 mb-2">Contents</h3>
+                            <!-- List group -->
+                            <ul class="menu-list lesson-content border-primary pr-4 py-2 "
+                                style="border-radius: 6px;">
+                              <!-- List Group item -->
+                              @foreach(var lesson in lessons)
+                              {
+                                <li>
+                                  <a class="menu-link is-flex is-justify-content-space-between">
+                                    <div class="flex-content">
+                                      <span class="icon">
+                                        <i class="fe fe-play fs-6"></i>
+                                      </span>
+                                      <span style="font-size: 14px">@lesson.name</span>
+                                    </div>
+                                    <div class="flex-content">
+                                      <span style="font-size: 14px">@lesson.time</span>
+                                    </div>
+                                  </a>
+                                </li>
+                              }
+                              <!-- List Group item -->
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    }
+                    <!-- Description -->
+                    <div class="course-infor" id="description" role="tabpanel"
+                         aria-labelledby="description-tab">
+                      <div class="mb-4">
+                        <h3 class="title is-4 mb-2">Course Descriptions</h3>
+                        <p>
+                          If you’re learning to program for the first time, or if you’re
+                          coming
+                          from a different language, this course, JavaScript: Getting Started,
+                          will give
+                          you the basics for coding in JavaScript. First, you'll discover the
+                          types of applications that can be built with JavaScript, and the
+                          platforms
+                          they’ll run on.
+                        </p>
+                      </div>
+                      <h4 class="mb-3">What you’ll learn</h4>
+                      <div class="columns mb-3">
+                        <div class="column">
+                          <div class="content">
+                            <div class="media">
+                              <figure class="media-left">
+                                <span class="icon has-text-success">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="14"
+                                       height="14" fill="currentColor"
+                                       viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                    <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z" />
+                                  </svg>
+                                </span>
+                              </figure>
+                              <div class="media-content">
+                                <p>
+                                  Recognize the importance of understanding your
+                                  objectives when addressing an audience.
+                                </p>
+                              </div>
+                            </div>
+                            <div class="media">
+                              <figure class="media-left">
+                                <span class="icon has-text-success">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="14"
+                                       height="14" fill="currentColor"
+                                       viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                    <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z" />
+                                  </svg>
+                                </span>
+                              </figure>
+                              <div class="media-content">
+                                <p>
+                                  Identify the fundaments of composing a successful
+                                  close.
+                                </p>
+                              </div>
+                            </div>
+                            <div class="media">
+                              <figure class="media-left">
+                                <span class="icon has-text-success">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="14"
+                                       height="14" fill="currentColor"
+                                       viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                    <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z" />
+                                  </svg>
+                                </span>
+                              </figure>
+                              <div class="media-content">
+                                <p>
+                                  Explore how to connect with your audience through
+                                  crafting compelling stories.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="column">
+                          <div class="content">
+                            <div class="media">
+                              <figure class="media-left">
+                                <span class="icon has-text-success">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="14"
+                                       height="14" fill="currentColor"
+                                       viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                    <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z" />
+                                  </svg>
+                                </span>
+                              </figure>
+                              <div class="media-content">
+                                <p>
+                                  Examine ways to connect with your audience by
+                                  personalizing your content.
+                                </p>
+                              </div>
+                            </div>
+                            <div class="media">
+                              <figure class="media-left">
+                                <span class="icon has-text-success">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="14"
+                                       height="14" fill="currentColor"
+                                       viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                    <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z" />
+                                  </svg>
+                                </span>
+                              </figure>
+                              <div class="media-content">
+                                <p>
+                                  Break down the best ways to exude executive presence.
+                                </p>
+                              </div>
+                            </div>
+                            <div class="media">
+                              <figure class="media-left">
+                                <span class="icon has-text-success">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="14"
+                                       height="14" fill="currentColor"
+                                       viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                    <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z" />
+                                  </svg>
+                                </span>
+                              </figure>
+                              <div class="media-content">
+                                <p>
+                                  Explore how to communicate the unknown in an
+                                  impromptu communication.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- review -->
+                    <div class="course-infor" id="review" role="tabpanel"
+                         aria-labelledby="review-tab">
+                      <!-- Reviews -->
+                      <div class="mb-3">
+                        <h3 class="title is-4 mb-2">Course Rating</h3>
+                        <div class="columns align-items-center">
+                          <div class="column is-one-quarter has-text-centered">
+                            <h3 class="title is-2 has-text-weight-bold">4.5</h3>
+                            <span class="subtitle has-text-warning is-6">
+                              <!-- stars -->
+                              <i class="fa-solid fa-star"></i>
+                              <i class="fa-solid fa-star"></i>
+                              <i class="fa-solid fa-star"></i>
+                              <i class="fa-solid fa-star"></i>
+                              <i class="fa-solid fa-star-half-stroke"></i>
+                            </span>
+                            <p class="subtitle is-6">(Based on 27 reviews)</p>
+                          </div>
+                          <div class="column is-one-quarter">
+                            <!-- Rating -->
+                            <div>
+                              <span class="has-text-warning">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                              </span>
+                              <span class="ml-1">53%</span>
+                            </div>
+                            <div>
+                              <span class="has-text-warning">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                              </span>
+                              <span class="ml-1">36%</span>
+                            </div>
+                            <div>
+                              <span class="has-text-warning">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                              </span>
+                              <span class="ml-1">9%</span>
+                            </div>
+                            <div>
+                              <span class="has-text-warning">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                              </span>
+                              <span class="ml-1">3%</span>
+                            </div>
+                            <div>
+                              <span class="has-text-warning">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                              </span>
+                              <span class="ml-1">2%</span>
+                            </div>
+                          </div>
+                          <!-- Progress Bar -->
+                          <div class="column">
+                            <progress class="progress is-warning is-small mb-3" value="90"
+                                      max="100">90%</progress>
+                            <progress class="progress is-warning is-small mb-3" value="80"
+                                      max="100">80%</progress>
+                            <progress class="progress is-warning is-small mb-3" value="70"
+                                      max="100">70%</progress>
+                            <progress class="progress is-warning is-small mb-3" value="60"
+                                      max="100">60%</progress>
+                            <progress class="progress is-warning is-small mb-0" value="50"
+                                      max="100">50%</progress>
+                          </div>
+
+                        </div>
+                      </div>
+                      <hr class="my-5">
+                      <div class="mb-3">
+                        <div class="columns is-flex is-align-items-center is-justify-content-space-between mb-5">
+                          <!-- Reviews -->
+                          <div class="column is-flex is-flex-direction-column mb-3">
+                            <h3 class="title is-6 mb-0">Reviews</h3>
+                          </div>
+                        </div>
+                        <!-- Rating -->
+                        <div class="media">
+                          <figure class="media-left">
+                            <figure class="image is-64x64">
+                              <img class="is-rounded"
+                                   src="../assets/images/avatar/Firefly person avatar, realistic female2.jpg"
+                                   alt="">
+                            </figure>
+                          </figure>
+                          <div class="media-content">
+                            <div class="content">
+                              <p>
+                                <strong>Max Hawkins</strong> <small>2 Days ago</small>
+                                <br>
+                                <span class="icon has-text-warning">
+                                  <i class="fas fa-star"></i>
+                                </span>
+                                <span class="icon has-text-warning">
+                                  <i class="fas fa-star"></i>
+                                </span>
+                                <span class="icon has-text-warning">
+                                  <i class="fas fa-star"></i>
+                                </span>
+                                <span class="icon has-text-warning">
+                                  <i class="fas fa-star"></i>
+                                </span>
+                                <span class="icon has-text-warning">
+                                  <i class="fas fa-star"></i>
+                                </span>
+                                <br>
+                                Lectures were at a really good pace and I never felt
+                                lost. The instructor was well informed and allowed me to
+                                learn and navigate Figma easily.
+                              </p>
+                            </div>
+                            <nav class="level is-mobile">
+                              <div class="level-left">
+                                <a class="level-item">
+                                  Was this review helpful?
+                                </a>
+                                <a class="level-item button is-small is-primary">Yes</a>
+                                <a class="level-item button is-small is-light">No</a>
+                              </div>
+                            </nav>
+                          </div>
+                        </div>
+                        <!-- Rating -->
+                        <div class="media">
+                          <figure class="media-left">
+                            <figure class="image is-64x64">
+                              <img class="is-rounded"
+                                   src="../assets/images/avatar/Firefly person avatar, realistic female2.jpg"
+                                   alt="">
+                            </figure>
+                          </figure>
+                          <div class="media-content">
+                            <div class="content">
+                              <p>
+                                <strong>Max Hawkins</strong> <small>2 Days ago</small>
+                                <br>
+                                <span class="icon has-text-warning">
+                                  <i class="fas fa-star"></i>
+                                </span>
+                                <span class="icon has-text-warning">
+                                  <i class="fas fa-star"></i>
+                                </span>
+                                <span class="icon has-text-warning">
+                                  <i class="fas fa-star"></i>
+                                </span>
+                                <span class="icon has-text-warning">
+                                  <i class="fas fa-star"></i>
+                                </span>
+                                <span class="icon has-text-warning">
+                                  <i class="fas fa-star"></i>
+                                </span>
+                                <br>
+                                Lectures were at a really good pace and I never felt
+                                lost. The instructor was well informed and allowed me to
+                                learn and navigate Figma easily.
+                              </p>
+                            </div>
+                            <nav class="level is-mobile">
+                              <div class="level-left">
+                                <a class="level-item">
+                                  Was this review helpful?
+                                </a>
+                                <a class="level-item button is-small is-primary">Yes</a>
+                                <a class="level-item button is-small is-light">No</a>
+                              </div>
+                            </nav>
+                          </div>
+                        </div>
+                        <!-- Rating -->
+                        <div class="media">
+                          <figure class="media-left">
+                            <figure class="image is-64x64">
+                              <img class="is-rounded"
+                                   src="../assets/images/avatar/Firefly person avatar, realistic female2.jpg"
+                                   alt="">
+                            </figure>
+                          </figure>
+                          <div class="media-content">
+                            <div class="content">
+                              <p>
+                                <strong>Max Hawkins</strong> <small>2 Days ago</small>
+                                <br>
+                                <span class="icon has-text-warning">
+                                  <i class="fas fa-star"></i>
+                                </span>
+                                <span class="icon has-text-warning">
+                                  <i class="fas fa-star"></i>
+                                </span>
+                                <span class="icon has-text-warning">
+                                  <i class="fas fa-star"></i>
+                                </span>
+                                <span class="icon has-text-warning">
+                                  <i class="fas fa-star"></i>
+                                </span>
+                                <span class="icon has-text-warning">
+                                  <i class="fas fa-star"></i>
+                                </span>
+                                <br>
+                                Lectures were at a really good pace and I never felt
+                                lost. The instructor was well informed and allowed me to
+                                learn and navigate Figma easily.
+                              </p>
+                            </div>
+                            <nav class="level is-mobile">
+                              <div class="level-left">
+                                <a class="level-item">
+                                  Was this review helpful?
+                                </a>
+                                <a class="level-item button is-small is-primary">Yes</a>
+                                <a class="level-item button is-small is-light">No</a>
+                              </div>
+                            </nav>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="column">
+              <!-- Card -->
+              <!-- Card -->
+              <div class="card mb-4 mt-4">
+                <!-- Card header -->
+                <header class="card-header">
+                  <p class="card-header-title">
+                    What’s included
+                  </p>
+                </header>
+                <div class="card-content" style="min-height: 100px;">
+                  <ul>
+                    <li>
+                      <i class="fe fe-play-circle align-middle mr-2 has-text-primary"></i>
+                      @lessons.Count hours video
+                    </li>
+                    <li>
+                      <i class="fe fe-award mr-2 align-middle has-text-success"></i>
+                      Certificate
+                    </li>
+                    <li>
+                      <i class="fe fe-clock align-middle mr-2 has-text-warning"></i>
+                      Lifetime access
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <!-- Card -->
+              <div class="card">
+                <!-- Card body -->
+                <div class="card-content" style="min-height: 100px;">
+                  <div class="media">
+                    <figure class="media-left">
+                      <figure class="image is-64x64">
+                        <img class="is-rounded"
+                             src="../assets/images/avatar/Firefly person avatar, realistic male1.jpg"
+                             alt="avatar">
+                      </figure>
+                    </figure>
+                    <div class="media-content">
+                      <p>
+                        <strong>@instructor.full_name</strong>
+                        <br>
+                        Front-end Developer, Designer
+                        <br>
+                        <span class="tag is-warning">4.5</span>
+                      </p>
+                    </div>
+                  </div>
+                  <div class="content">
+                    I am an Innovation designer focussing on UX/UI based in Berlin. As a creative
+                    resident at Figma explored the city of the future and how new technologies.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Card -->
+          <!-- recommend course here nha bồ rảnh thì bỏ -->
+        </div>
+      </section>
+    </main>
+  }
+	@if (inputKey)
+	{
+		<div class="modal is-active" id="enrollment-modal">
+			<div class="modal-background"></div>
+			<div class="modal-content" style="width: 40%">
+				<header class="modal-card-head background-darkmode-dark">
+					<p class="modal-card-title">Enrollment</p>
+				</header>
+				<section class="modal-card-body background-darkmode-dark">
+					<input @bind="key" class="input" type="text" id="enrollment-key" placeholder="Enrollment key">
+					@if (!string.IsNullOrEmpty(message))
+					{
+						<p class="has-text-danger mt-4">@message</p>
+					}
+				</section>
+				<div class="modal-card-foot background-darkmode-dark">
+					<a @onclick="() => ValidateKey()" class="button is-primary  mr-4" id="enroll-button">Enroll</a>
+					<a @onclick="() => inputKey = false" class="button is-danger" id="cancel-button">Cancel</a>
+				</div>
+			</div>
+		</div>
+	}
+
+</div>
+
+@code {
+  [CascadingParameter]
+  public MainLayout Layout { get; set; }
+
+  private string _title = "Course Detail";
+  [Parameter]
+  public string id { get; set; }
+
+  public CourseModel course = new();
+  private bool inputKey;
+  private string key;
+  private string message;
+  private List<string> toggle = new();
+  private UserModel instructor;
+  private List<LessonModel> lessons = new();
+
+  protected override async Task OnInitializedAsync()
+  {
+    if (!string.IsNullOrEmpty(id))
+    {
+      lessons = await DbLesson.GetAllByCourse(id);
+      course = await DbCourse.GetById(id);
+      if (course == null)
+      {
+        navigation.NavigateTo("homepage");
+      }
+      instructor = await DbUser.GetById(course.instructor);
+    }
+    else
+    {
+      navigation.NavigateTo("homepage");
+    }
+  }
+
+  private void InputKey()
+  {
+    message = null;
+    inputKey = true;
+  }
+  private async void ValidateKey()
+  {
+    if (string.IsNullOrEmpty(key))
+    {
+      message = "Please input key!!";
+      return;
+    }
+
+    if (course.key != key)
+    {
+      message = "Key is Wrong!!";
+      return;
+    }
+    if (!course.members.Contains(Layout.User.id))
+      course.members.Add(Layout.User.id);
+    if (!Layout.User.courses.Contains(course.id))
+      Layout.User.courses.Add(course.id);
+    inputKey = false;
+
+    LearnedModel learnedModel = new();
+    learnedModel.course = course.id;
+    learnedModel.course_name = course.name;
+    learnedModel.date_start = DateTime.Now.Ticks;
+    learnedModel.user = Layout.User.id;
+    learnedModel.instructor = course.instructor;
+    await DbLearned.Create(learnedModel);
+
+    await DbUser.Update(Layout.User);
+		await DbCourse.Update(course);
+
+	}
+
+
+}

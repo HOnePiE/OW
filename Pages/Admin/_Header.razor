@@ -1,0 +1,104 @@
+﻿@inject NavigationManager navigation
+@inject IJSRuntime JSRuntime
+
+<div class="header">
+  <!-- navbar -->
+  <nav class="navbar-default navbar navbar-expand-lg">
+    <!--Navbar nav -->
+    <div class="ms-auto d-flex">
+      <ul class="navbar-nav navbar-right-wrap ms-2 d-flex nav-top-wrap">
+        <!-- List -->
+				<li class="dropdown ms-2 d-inline-block position-static">
+					<a class="rounded-circle" data-bs-toggle="dropdown" data-bs-display="static"
+						 aria-expanded="false">
+						<div class="avatar avatar-md avatar-indicators avatar-online">
+							<img alt="avatar" src="./assets/images/avatar/gigachad.jpg"
+									 class="rounded-circle" />
+						</div>
+					</a>
+					<div class="dropdown-menu dropdown-menu-end position-absolute mx-3 my-5">
+						<div class="dropdown-item">
+							<div class="d-flex">
+								<div class="avatar avatar-md avatar-indicators avatar-online">
+									<img alt="avatar" src="./assets/images/avatar/gigachad.jpg"
+											 class="rounded-circle" />
+								</div>
+								<div class="ms-3 lh-1">
+									@if(Layout.User != null)
+									{
+										<h5 class="mb-1">@Layout.User.full_name</h5>
+										<p class="mb-0">@Layout.User.email</p>
+									}
+								</div>
+							</div>
+						</div>
+						<div class="dropdown-divider"></div>
+						<ul class="list-unstyled">
+							<li>
+								<a href="/account/@Layout.User.id" class="icon-text px-2 py-1">
+									<span class="icon">
+										<i class="fas fa-user"></i>
+									</span>
+									<span>Account</span>
+								</a>
+							</li>
+							<li>
+								<a class="icon-text px-2 py-1" href="/admin-course-overview">
+									<span class="icon">
+										<i class="fas fa-cogs"></i>
+									</span>
+									<span>Admin management</span>
+								</a>
+							</li>
+						</ul>
+						<div class="dropdown-divider"></div>
+						<ul class="list-unstyled">
+							<li>
+								<a class="icon-text px-2 py-1" @onclick="SignOut">
+									<span class="icon">
+										<i class="fas fa-power-off"></i>
+									</span>
+									<span>Sign Out</span>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</li>
+			</ul>
+    </div>
+  </nav>
+</div>
+@code {
+	[CascadingParameter]
+	public MainLayout Layout { get; set; }
+
+	protected override async Task OnAfterRenderAsync(bool firstrender)
+	{
+		if (Layout.User == null)
+		{
+			var userID = await JSRuntime.InvokeAsync<string>("getCookie", "_user");
+			if (!string.IsNullOrEmpty(userID))
+			{
+				Layout.User = await DbUser.GetById(userID);
+				if (Layout.User == null)
+				{
+					await JSRuntime.InvokeVoidAsync("deleteCookie", "_user");
+				}
+				StateHasChanged();
+			}
+			else
+			{
+				navigation.NavigateTo("");
+			}
+		}
+	}
+
+
+	private async void SignOut()
+	{
+		await JSRuntime.InvokeVoidAsync("deleteCookie", "_user");
+		navigation.NavigateTo("/");
+		Layout.User = null;
+
+	}
+}

@@ -1,0 +1,591 @@
+﻿@page "/admin-course-overview"
+@inject IWebHostEnvironment WebHostEnvironment
+@inject IJSRuntime JSRuntime
+<div id="db-wrapper">
+	<!-- navbar vertical -->
+	<!-- Sidebar -->
+	<_Sidebar></_Sidebar>
+	<!-- Page Content -->
+	<main id="page-content">
+		@if (Layout.User != null)
+		{
+			<_Header></_Header>
+			@if (!editCourse)
+			{
+				<section class="container-fluid px-4">
+					<div class="row">
+						<div class="col-lg-12 col-md-12 col-12">
+							<!-- Page Header -->
+							<div class="border-bottom pb-3 mb-3 d-md-flex align-items-center justify-content-between">
+								<div class="mb-3 mb-md-0">
+									<h1 class="mb-1  title is-light">Courses</h1>
+									<!-- Breadcrumb -->
+									<nav aria-label="breadcrumb">
+										<ol class="breadcrumb">
+											<li class="breadcrumb-item">
+												<a>Courses</a>
+											</li>
+											<li class="breadcrumb-item active" aria-current="page">All</li>
+										</ol>
+									</nav>
+								</div>
+								<div>
+									<a @onclick="OpenForm" class="btn btn-primary">Add New Courses</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-12 col-md-12 col-12">
+							<!-- Card -->
+							<div class="card rounded-3">
+								<!-- Card header -->
+								<div class="card-header p-0">
+									<div>
+										<div class="p-4 row">
+											<!-- Form -->
+											<div class="d-flex align-items-center col-12 col-md-12 col-lg-12">
+												<span class="position-absolute ps-3 search-icon"><i class="fe fe-search"></i></span>
+												<input @oninput="HandleInput" @onkeypress="SearchCourse" type="text" class="form-control ps-6" placeholder="Search Course">
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="table-responsive border-0 overflow-y-hidden">
+									<table class="table background-darkmode-dark is-fullwidth is-hoverable">
+										<thead style="  background-color: #1e293b ;">
+											<tr>
+
+												<th width="30%">Courses</th>
+												<th width="20%">Description</th>
+												<th width="20%">Instructor</th>
+												<th width="5%">Active</th>
+												<th width="15%">Handle</th>
+											</tr>
+										</thead>
+										<tbody>
+											@foreach (var course in courses)
+											{
+												<tr @onclick="() => ShowInfor(course)">
+													<td>
+														<a class="text-inherit">
+															<div class="is-flex is-align-items-center">
+																<div>
+																	<img src="./assets/images/upload/@course.image"
+																			 alt="" class="img-4by3-lg rounded">
+																</div>
+																<div class="ms-3">
+																	<h4 class="mb-1 text-primary-hover text_course">
+																		<a href="/admin-course-detail/@course.id" class="text-primary-hover has-text-white">
+																			@course.name
+																		</a>
+																	</h4>
+																</div>
+															</div>
+														</a>
+													</td>
+													<td>
+														<div class="d-flex align-items-center text_description ">
+															<p class="mb-0 text_course">@course.description</p>
+														</div>
+													</td>
+													<td>
+														<div class="">
+															@{
+																var instructor = instructors.FirstOrDefault(x => x.id == course.instructor);
+															}
+															<p class="mb-0">@instructor.full_name</p>
+														</div>
+													</td>
+													<td>
+														@if (course.active)
+														{
+															<a class="has-text-success">
+																<i class="fa-solid fa-toggle-on"></i>
+															</a>
+														}
+														else
+														{
+															<a class="has-text-grey">
+																<i class="fa-solid fa-toggle-off"></i>
+															</a>
+														}
+													</td>
+													<td>
+														<span class="icon-text">
+															@if (course.instructor == Layout.User.id || course.creator == Layout.User.id)
+															{
+																<a class="has-text-link" @onclick="() => EditCours(course)">
+																	<span class="icon">
+																		<i class="fa-solid fa-pen"></i>
+																	</span>
+																</a>
+															}
+															@* <a class="has-text-danger" >
+												<span class="icon">
+												<i class="fa-solid fa-trash"></i>
+												</span>
+												</a> *@
+														</span>
+													</td>
+												</tr>
+											}
+										</tbody>
+									</table>
+								</div>
+
+								<!-- Card Footer -->
+							</div>
+						</div>
+					</div>
+				</section>
+			}
+			else
+			{
+				<div class="has-text-dark " data-theme="dark">
+					<section class="section">
+						<div class="container">
+							<div class="columns">
+								<div class="column is-offset-1 is-10">
+									<div class="columns is-vcentered is-justify-content-space-between">
+										<!-- Content -->
+										<div class="mb-lg-0 ">
+											<h3 class="title is-light">@(courseEdit.id != null ? "Edit Course" : "Add New Course")</h3>
+										</div>
+										<div class="buttons">
+											<a @onclick="BackToCourse" class="button">Back to Course</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+					<!-- Page Content -->
+					<section class="section">
+						<div class="container">
+							<div class="columns is-centered">
+								<div class="column is-10 p-0">
+									<!-- Stepper content -->
+									<div class="">
+										<div class="tab-content">
+											<!-- Content one -->
+											<div class="content ">
+												<!-- Card -->
+												<div class="card p-0">
+													<!-- Card body -->
+													<div class="card-content background-darkmode-dark has-text-light">
+														<div class="field">
+															<label for="courseTitle" class="label">Course Title</label>
+															<div class="control">
+																<input @bind="courseEdit.name" id="courseTitle" class="input" type="text"
+																			 placeholder="Course Title " />
+															</div>
+														</div>
+														<div class="field">
+															<label class="label">Major</label>
+															<div class="control">
+																<div class="select">
+																	<select @onchange="ChangeMajor">
+																		<option value="">Select Major</option>
+																		@foreach (var major in majors)
+																		{
+																			<option value="@major.id">@major.name</option>
+																		}
+																	</select>
+																</div>
+															</div>
+														</div>
+														<div class="field">
+															<label class="label">Courses level</label>
+															<div class="control">
+																<div class="select">
+																	<select @onchange="ChangeLevel">
+																		<option value="">Select level</option>
+																		@foreach(var item in levels)
+																		{
+																			<option value=@item.id>@item.name</option>
+																		}
+																	</select>
+																</div>
+															</div>
+														</div>
+														<div class="field">
+															<label class="label">Instructor</label>
+															<div class="control">
+																<div class="select">
+																	<select @onchange="ChangeInstructor">
+																		<option value="">Select Instructor</option>
+																		@foreach (var item in instructors)
+																		{
+																			<option value=@item.id>@item.full_name</option>
+																		}
+																	</select>
+																</div>
+															</div>
+														</div>
+														<div class="field">
+															<label class="label">Course Description</label>
+															<div class="field">
+																<div class="control">
+																	<textarea @bind="courseEdit.description" id="courseTitle" style="height: 100px" class="input" type="text"
+																						placeholder="Course Description " />
+																</div>
+															</div>
+														</div>
+														<div class="field">
+															<label for="courseTitle" class="label">Key To Join Course</label>
+															<div class="control">
+																<input @bind="courseEdit.key" id="courseTitle" class="input" type="text"
+																			 placeholder=" " />
+															</div>
+														</div>
+														<div class="field">
+															<label class="label">Image</label>
+															<div class="field">
+																<div class="control">
+																	<div class="mb-4">
+																		<img src="./assets/images/upload/@courseEdit.image"
+																					alt="" class="img-4by3-lg rounded">
+																	</div>	
+																	<InputFile class="" OnChange="HandleFileSelected" multiple />
+																</div>
+															</div>
+														</div>
+														<div class="field">
+															<div class="field">
+																<div class="control pt-2">
+																	@if (!string.IsNullOrEmpty(error))
+																	{
+																		<p class="has-text-danger">@error</p>
+																	}
+
+																	@if (!string.IsNullOrEmpty(message))
+																	{
+																		<p class="has-text-success">@message</p>
+																	}
+																	<a @onclick="UpdateCourse" type="submit" class="btn btn-primary" for="category_form">@(courseEdit.id != null ? "Update Course" : "Add New Course")</a>
+																</div>
+															</div>
+														</div>
+
+													</div>
+												</div>
+											</div>
+											<!-- Content two -->
+											<!-- COntent three -->
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+
+				</div>
+			}
+		}		
+		<!-- Container fluid -->
+	</main>
+
+	@if (showInfor && editCourse == false)
+	{
+		<div id="courseDetail-modal" class="modal is-active" style="font-weight: 500; font-size: 1.25rem;">
+			<div class="modal-background"></div>
+			<div class="modal-content" style="width: 90%;height: 78%; overflow: hidden;border-radius: 6px;">
+				<div class="" style="width: 100%; height: 100%; overflow:hidden;">
+					<section class="section background-darkmode-light"
+									 style="width: 100%; height: 100%; overflow-y: scroll;">
+						<h1 class="title is-5 primary-color">@courseEdit.name</h1>
+						<div class="columns" style="width: 100%;">
+							<div class="column box-shadow background-darkmode-dark" style="border-radius: 6px;">
+								<div class="">
+									<div class="is-flex is-justify-content-center mb-4">
+										<div class="card-image">
+											<figure class="image">
+												<img id="imgClickAndChange" style="border-radius: 6px;"
+														 src="./assets/images/upload/@courseEdit.image" alt="course">
+												<input type="file" id="fileInput" style="display: none;">
+											</figure>
+										</div>
+									</div>
+
+									<div class="field">
+										<label class="is-size-6">Course Duration</label>
+										<div class="control">
+											<input class="input" type="text" value="30 hours" readonly>
+										</div>
+									</div>
+									<div class="field">
+										<label class="is-size-6">Number of Lessons</label>
+										<div class="control">
+											<input class="input" type="number" value="@courseEdit.lesson.Count" readonly>
+										</div>
+									</div>
+									<div class="field">
+										<label class="is-size-6">Number of Learners</label>
+										<div class="control">
+											<input class="input" type="number" value="@courseEdit.members.Count" readonly>
+										</div>
+									</div>
+									<!-- more items here -->
+								</div>
+							</div>
+
+							<div class="column is-three-quarters fixed-grid has-2-cols has-1-cols-mobile">
+								<div class="grid has-1-cols-mobile">
+									<div class="cell field m-0">
+										<label class="background-darkmode-light is-size-6 pb-2">Instructor</label>
+										@{
+											var instructor = instructors.FirstOrDefault(x => x.id == courseEdit.instructor);
+										}
+										<div class="media ">
+											<figure class="media-left">
+												<p class="image is-32x32">
+													<img src="../../assets/images/avatar/Firefly person avatar, realistic female1.jpg"
+															 alt="" class="is-rounded">
+												</p>
+											</figure>
+											<div class="media-content  pt-2">
+												<p class="title is-6">@instructor.full_name</p>
+											</div>
+										</div>
+									</div>
+									<div class="cell field m-0">
+										<label class="background-darkmode-light is-size-6 pb-2">Creator</label>
+										@{
+											var creator = users.FirstOrDefault(x => x.id == courseEdit.creator);
+										}
+										<div class="media ">
+											<figure class="media-left">
+												<p class="image is-32x32">
+													<img src="../../assets/images/avatar/Firefly person avatar, realistic female1.jpg"
+															 alt="" class="is-rounded">
+												</p>
+											</figure>
+											<div class="media-content">
+												<p class="title is-6 pt-2 ">@creator.full_name</p>
+											</div>
+										</div>
+									</div>
+									<div class="cell field">
+										<label class="background-darkmode-light is-size-6">Date Created</label>
+										<div class="control">
+											<input class="input background-darkmode-light" type="text" value="@(new DateTime(courseEdit.date_create).ToString("dd/MM/yyyy"))" readonly>
+										</div>
+									</div>
+									<div class="cell field">
+										<label class="background-darkmode-light is-size-6">Level</label>
+										<div class="control">
+											@{
+												var level = levels.FirstOrDefault(x => x.id == courseEdit.level);
+											}
+											<input class="input background-darkmode-light" type="text" value="@level.name"
+														 readonly>
+										</div>
+									</div>
+									<div class="cell is-col-span-2-widescreen field">
+										<div class="control">
+											<textarea class="textarea background-darkmode-light" value="@courseEdit.description"
+																 readonly></textarea>
+										</div>
+									</div>
+									<!-- functional button-->
+
+								</div>
+								<div class="field is-flex is-justify-content-flex-end">
+									<div class="control">
+										<a @onclick="() => showInfor = false" class="button  is-danger">Close</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+				</div>
+			</div>
+		</div>
+	}
+
+</div>
+
+@code {
+	[CascadingParameter]
+	public MainLayout Layout { get; set; }
+	private CourseModel courseEdit = new();
+	private bool editCourse = false;
+	private List<MajorModel> majors = new();
+	private string message;
+	private string error;
+	private List<UserModel> instructors = new();
+	private List<UserModel> users = new();
+	private List<CourseModel> courses = new();
+	private List<CourseModel> coursesTemp = new();
+	private List<StaticModel> levels = new();
+	private string searchCourse;
+	private string fileName;
+	private bool showInfor;
+	private string filePath;
+	private IBrowserFile file;
+
+	protected override async Task OnInitializedAsync()
+	{
+		showInfor = false;
+		courses = await DbCourse.GetAll();
+		coursesTemp = Shared.CloneList(courses);
+		users = await DbUser.GetAll();
+		instructors = users.Where(x => x.role == 2).ToList();
+		levels = Service.ModuleService.ListLevel();
+		majors = await DbMajor.GetAll();
+	}
+
+
+	private void OpenForm()
+	{
+		error = null;
+		message = null;
+		courseEdit = new();
+		editCourse = true;
+		fileName = courseEdit.image;
+	}
+
+	private void ShowInfor(CourseModel model)
+	{
+		courseEdit = Shared.Clone(model);
+		showInfor = true;
+	}
+	private void EditCours(CourseModel course)
+	{
+		message = null;
+		editCourse = true;
+		courseEdit = Shared.Clone(course);
+	}
+	private async void ChangeMajor(ChangeEventArgs e)
+	{
+		courseEdit.major_id = e.Value.ToString(); 
+	}
+
+	private async void ChangeLevel(ChangeEventArgs e)
+	{
+		courseEdit.level = Convert.ToInt32(e.Value.ToString());
+	}
+
+	private async void ChangeInstructor(ChangeEventArgs e)
+	{
+		courseEdit.instructor = e.Value.ToString();
+	}
+
+	private async Task<bool> UpdateCourse()
+	{
+		error = null;
+		message = null;
+		if (string.IsNullOrEmpty(courseEdit.name))
+		{
+			error = "Please input name for course";
+			return false;
+		}
+		if (string.IsNullOrEmpty(courseEdit.major_id))
+		{
+			error = "Please choose major for course";
+			return false;
+		}
+		if (courseEdit.level == 0)
+		{
+			error = "Please choose level for course";
+			return false;
+		}
+		if (string.IsNullOrEmpty(courseEdit.image))
+		{
+			error = "Please choose picture for course";
+			return false;
+		}
+		if (string.IsNullOrEmpty(courseEdit.instructor))
+		{
+			error = "Please choose instructor for course";
+			return false;
+		}
+
+		if (string.IsNullOrEmpty(courseEdit.key))
+		{
+			error = "Please input key for course";
+			return false;
+		}
+
+		if (string.IsNullOrEmpty(courseEdit.id))
+		{
+			@if (!string.IsNullOrEmpty(filePath))
+			{
+				using (var fileStream = new FileStream(filePath, FileMode.Create))
+				{
+					await file.OpenReadStream(maxFileSize).CopyToAsync(fileStream);
+				}
+			}
+			courseEdit.date_create = DateTime.Today.Ticks;
+			courseEdit.creator = Layout.User.id;
+			courseEdit.active = true;
+			message = "Create Successful";
+			await DbCourse.Create(courseEdit);
+			courses = await DbCourse.GetAll();
+		}
+		else
+		{
+			@if (!string.IsNullOrEmpty(filePath))
+			{
+				using (var fileStream = new FileStream(filePath, FileMode.Create))
+				{
+					await file.OpenReadStream(maxFileSize).CopyToAsync(fileStream);
+				}
+			}
+			message = "Update Successful";
+			await DbCourse.Update(courseEdit);
+			courses = await DbCourse.GetAll();
+		}
+		return true;
+	}
+
+	private void BackToCourse()
+	{
+		editCourse = false;
+		showInfor = false;
+	}
+
+	private long maxFileSize = 1024 * 2048;
+	private async Task HandleFileSelected(InputFileChangeEventArgs e)
+	{
+		file = e.File;
+
+		// Kiểm tra xem có file được chọn không
+		if (file != null)
+		{
+			// Tạo đường dẫn đến thư mục upload
+			var uploadFolder = Path.Combine(WebHostEnvironment.WebRootPath, "assets", "images", "upload");
+
+			// Tạo thư mục upload nếu chưa tồn tại
+			if (!Directory.Exists(uploadFolder))
+			{
+				Directory.CreateDirectory(uploadFolder);
+			}
+
+			// Tạo đường dẫn đến tập tin lưu trữ
+			filePath = Path.Combine(uploadFolder, file.Name);
+
+			courseEdit.image = file.Name;
+		}
+	}
+
+	void HandleInput(ChangeEventArgs e)
+	{
+		searchCourse = e.Value.ToString();
+	}
+
+	private void SearchCourse(KeyboardEventArgs e)
+	{
+		if (e.Key == "Enter")
+		{
+			if (string.IsNullOrEmpty(searchCourse))
+				courses = Shared.CloneList(coursesTemp);
+			else
+				courses = coursesTemp.Where(x => x.name.ToLower().Contains(searchCourse)).ToList();
+		}
+	}
+
+
+}
